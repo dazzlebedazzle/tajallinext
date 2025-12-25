@@ -26,11 +26,35 @@ const bodyParser = require('body-parser');
 const errorHandler = require("./middleware/errorhandler");
 const prerenderMiddleware = require("./middleware/preRender");
 const corsOptions = {
-    origin: ['http://localhost:3000','http://tajalli.co.in', 'http://admin.tajalli.co.in','https://tajalli.co.in' ,'https://www.tajalli.co.in',  'https://tajalli.co.in', 'https://admin.tajalli.co.in','http://localhost:4001','http://localhost:5000',"http://72.60.202.5:4000","http://72.60.202.5:4000",],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204
-  };
+  origin: [
+    // Local
+    'http://localhost:3000',
+    'http://localhost:4001',
+    'http://localhost:5000',
+
+    // Tajalli main domains
+    'http://tajalli.co.in',
+    'https://tajalli.co.in',
+    'http://www.tajalli.co.in',
+    'https://www.tajalli.co.in',
+
+    'http://tajalli.in',
+    'https://tajalli.in',
+    'http://www.tajalli.in',
+    'https://www.tajalli.in',
+
+    // Admin
+    'http://admin.tajalli.co.in',
+    'https://admin.tajalli.co.in',
+
+    // Direct IP (if really needed)
+    'http://72.60.202.5:4000'
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
 app.use(cors(corsOptions));
 app.use(prerenderMiddleware);
 
