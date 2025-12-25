@@ -26,7 +26,7 @@ const bodyParser = require('body-parser');
 const errorHandler = require("./middleware/errorhandler");
 const prerenderMiddleware = require("./middleware/preRender");
 const corsOptions = {
-    origin: ['http://localhost:3000','http://tajalli.co.in', 'http://admin.tajalli.co.in','https://tajalli.co.in' ,'https://www.tajalli.co.in',  'https://tajalli.co.in', 'https://admin.tajalli.co.in','http://localhost:3001','http://localhost:5000',"http://192.168.1.12:3000","http://192.168.1.11:3000",],
+    origin: ['http://localhost:3000','http://tajalli.co.in', 'http://admin.tajalli.co.in','https://tajalli.co.in' ,'https://www.tajalli.co.in',  'https://tajalli.co.in', 'https://admin.tajalli.co.in','http://localhost:4001','http://localhost:5000',"http://72.60.202.5:4000","http://72.60.202.5:4000",],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204
