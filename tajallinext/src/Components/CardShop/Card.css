@@ -1,0 +1,513 @@
+/* card.css */
+.card_shop {
+    height: fit-content;
+    width: 220px;
+    background-color: #F4E9DC;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    position: relative;
+}
+.vegicon img{
+    position: absolute;
+    width: 12%;
+    bottom: 52%;
+    right: 18px;
+    height: auto;
+}
+
+.card_shop:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card_shop > img:hover {
+    transform: scale(1.02);
+}
+
+.card_shop h2 {
+    color: #723207;
+    font-size: 16px;
+      display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    max-height: 6em;
+    margin: 5px 0;
+}
+
+.card_shop h3 {
+    color: #A17659;
+    font-size: 14px;
+    font-weight: bolder;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.card_shop p {
+    font-size: 15px;
+    margin: 0;
+}
+
+.card_shop .add {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #723207;
+    border: none;
+    color: white;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+.card_shop .add:hover {
+    background-color: #A17659;
+    color: white;
+}
+
+.card_shop .weight {
+    color: rgb(0, 0, 0);
+    border: 0;
+    outline: none;
+    border-radius: 10px;
+    padding: 2px;
+}
+.pricefont{
+    font-size: 18px;
+}
+.card_shop .weightperg {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+
+.wishlist-icon {
+    font-size: 20px;
+    cursor: pointer;
+    color: #A17659;
+}
+
+.wishlist-icon:hover {
+    color: brown;
+}
+
+.card-link1 {
+    text-decoration: none;
+}
+
+.card-link1 {
+  text-decoration: none;
+}
+
+.two {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-size: 12px;
+}
+.about-product {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Number of lines to display */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5; /* Adjust line height as needed */
+    max-height: 3em; /* Adjust height based on line-height and number of lines */
+  }
+/* Media Queries for Responsive Design */
+/* Card.css */
+.popup-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 40%;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start; /* Aligns popup at the top of the page */
+    justify-content: center;
+    pointer-events: none; /* Ensures the popup does not block interactions with other elements */
+  }
+  
+  .popup-content {
+    background: #fff;
+    color: #3e3e3e;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    max-width: 90%;
+    width: 350px; /* Fixed width for better control */
+    pointer-events: auto; /* Allows interaction with the popup */
+  }
+  .popup-content img{
+    height: auto;
+    width: 50%;
+  }
+  
+  .popup-success {
+    background: #f4e1d2; /* Light brownish background for success */
+    color: #6d4c41; /* Darker brown text color */
+  }
+  
+  .popup-login {
+    background: #fce4e4; /* Light pinkish background for login alert */
+    color: #d32f2f; /* Darker red text color */
+  }
+  
+  .popup-button {
+    background: #8d6e63; /* Medium brown button background */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .popup-button:hover {
+    background: #6d4c41; /* Darker brown on hover */
+  }
+  
+  .popup-close {
+    background: transparent;
+    color: #3e3e3e;
+    border: none;
+    position: absolute;
+    top: 11px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-weight: 600;
+    background-color: #9f9f9f;
+    border-radius: 20px;
+    padding: 0px 9px;
+    color: #fff;
+  }
+  
+  .popup-close:hover {
+    color: #d32f2f; /* Red color on hover */
+  }
+  
+  .popup-content p {
+    font-size: 1.2em; /* Adjust text size as needed */
+    margin: 0;
+  }
+  
+ .weightperg p{
+    color: green;
+    font-size: 15px !important;
+    margin-bottom: 0;
+ }
+ .weightperg  span{
+    font-size: 11px;
+    margin-top: 8px;
+ }
+  
+@media (max-width: 768px) {
+    .card_shop {
+        width: 46%; /* Adjusted width for tablets and mobile devices */
+    }
+    .card_shop .weight{
+        order: -1;
+    }
+
+    .card_shop h2 {
+        font-size: 14px; /* Adjusted font size */
+    }
+
+    .card_shop h3 {
+        font-size: 12px; /* Adjusted font size */
+    }
+
+    .vegicon img{
+      bottom: 65%;
+    }
+
+    .wishlist-icon {
+        font-size: 18px; /* Adjusted icon size */
+    }
+    .popup-content {
+        width: 90%; /* Full width on smaller screens */
+        max-width: none; /* Remove fixed width constraint */
+      }
+    
+      .popup-content p {
+        font-size: 1em; /* Smaller text size on mobile devices */
+      }
+      .card_shop .weightperg {
+        font-size: 10px; /* Adjusted font size */
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .card_shop .weight{
+        font-size: 13px;
+        padding: 5px;
+        margin: 4px 10px 4px 0px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .card_shop {
+        
+        padding: 8px; /* Adjusted padding */
+    }
+
+    .card_shop h2 {
+        font-size: 12px; /* Adjusted font size */
+    }
+
+    .card_shop h3 {
+        font-size: 10px; /* Adjusted font size */
+    }
+
+  
+
+    .card_shop .add {
+        padding: 3px 5px; /* Adjusted button padding */
+        font-size: 10px; /* Adjusted font size */
+    }
+
+    .wishlist-icon {
+        font-size: 16px; /* Adjusted icon size */
+    }
+
+    .card_shop .weightperg {
+        font-size: 10px; /* Adjusted font size */
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .popup-content {
+        width: 75%; /* Full width on smaller screens */
+        max-width: none; /* Remove fixed width constraint */
+      }
+    
+      .popup-content p {
+        font-size: 1em; /* Smaller text size on mobile devices */
+      }
+      .weightperg p{
+        color: green;
+        font-size: 16px;
+     }
+     .weightperg  span{
+        font-size: 11px;
+        margin-top: 8px;
+     }
+     .card_shop .weight {
+        color: rgb(0, 0, 0);
+        border: 0;
+        outline: none;
+        border-radius: 10px;
+        
+    }
+    .vegicon img{
+      bottom: 60%;
+    }
+      
+}
+@media (max-width: 380px) {
+    .card_shop {
+      
+        padding: 6px; /* Adjusted padding */
+    }
+
+    .card_shop h2 {
+        font-size: 12px; /* Adjusted font size */
+    }
+
+    .card_shop h3 {
+        font-size: 10px; /* Adjusted font size */
+    }
+
+
+    .card_shop .add {
+        padding: 3px 5px; /* Adjusted button padding */
+        font-size: 10px; /* Adjusted font size */
+    }
+
+    .wishlist-icon {
+        font-size: 16px; /* Adjusted icon size */
+    }
+
+    .card_shop .weightperg {
+        font-size: 8px; /* Adjusted font size */
+    }
+    .card_shop .weight {
+        font-size: 10px;
+    }
+    .popup-content {
+        width: 65%; /* Full width on smaller screens */
+        max-width: none; /* Remove fixed width constraint */
+      }
+    
+      .popup-content p {
+        font-size: 1em; /* Smaller text size on mobile devices */
+      }
+
+      .weightperg p{
+        color: green;
+        font-size: 16px;
+     }
+     .weightperg  span{
+        font-size: 11px;
+        margin-top: 8px;
+     }
+      
+}
+
+
+/* card-shop.css */
+
+  .card_shop:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .cardmain-image {
+    width: 100%;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+    height: auto;
+  }
+  
+  .card_shop > img:hover {
+    transform: scale(1.02);
+  }
+  
+  .card_shop h2 {
+    color: #723207;
+    font-size: 16px;
+  }
+  
+  .card_shop h3 {
+    color: #A17659;
+    font-size: 14px;
+    font-weight: bolder;
+    margin-top: 5px;
+  }
+  
+  .card_shop p {
+    font-size: 15px;
+  }
+  
+  .card_shop .add {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #723207;
+    border: none;
+    color: white;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .card_shop .add:hover {
+    background-color: #A17659;
+    color: white;
+  }
+  
+  .card_shop .weight {
+    color: rgb(0, 0, 0);
+    border: 0;
+    outline: none;
+    border-radius: 10px;
+    padding: 4px;
+  }
+  
+  .card_shop .weightperg {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+  
+  .card_shop hr {
+    color: #777;
+    margin: 2px auto auto;
+    width: 80%;
+  }
+  
+  .wishlist {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .wishlist-icon {
+    font-size: 20px;
+    cursor: pointer;
+    color: #A17659;
+  }
+  
+  .wishlist-icon:hover {
+    color: brown;
+  }
+  
+  .card-link {
+    text-decoration: none;
+  }
+  
+  .two {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-size: 12px;
+  }
+  
+  /* Media Queries for Responsive Design */
+  @media (max-width: 768px) {
+    .card_shop {
+      width: 150px; /* Adjusted width for tablets and mobile devices */
+      /* margin-left: 10px;  */
+    }
+  
+    .card_shop h2 {
+      font-size: 14px; /* Adjusted font size */
+    }
+  
+    .card_shop h3 {
+      font-size: 12px; /* Adjusted font size */
+    }
+  
+    
+  
+    .wishlist-icon {
+      font-size: 18px; /* Adjusted icon size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card_shop {
+      width: 160px; /* Further adjusted width for smaller mobile devices */
+      padding: 8px; /* Adjusted padding */
+    }
+  
+    .card_shop h2 {
+      font-size: 12px; /* Adjusted font size */
+    }
+  
+    .card_shop h3 {
+      font-size: 10px; /* Adjusted font size */
+    }
+  
+  
+    .card_shop .add {
+      padding: 3px 5px; /* Adjusted button padding */
+      font-size: 10px; /* Adjusted font size */
+    }
+  
+    .wishlist-icon {
+      font-size: 16px; /* Adjusted icon size */
+    }
+  
+    .card_shop .weightperg {
+      font-size: 10px; /* Adjusted font size */
+    }
+  }
+  

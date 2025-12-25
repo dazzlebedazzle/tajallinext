@@ -1,0 +1,374 @@
+.aboutus_main{
+    background-color: #F4E9DC;
+  }
+  .aboutus-header {
+  display: flex;
+  justify-content: center;
+  height: 50vh;
+  width: 100%;
+  
+  background: url('../../../public/assets/aboutusbg.webp');
+  background-size: cover;
+  }
+  
+  .aboutus-header h1  {
+  margin-right: 15px;
+  margin-top: 100px;
+  font-size: 70px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  left: 16%;
+  top: 8%;
+  }
+  
+  .our-story {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:  60px;
+  background-color: #f8f3ef;
+  gap: 50px;
+  }
+  
+  .ourstory-content {
+  max-width: 40%;
+  }
+  
+  .ourstory-content h2 {
+  font-size: 40px;
+  font-family: "Poppins", sans-serif;
+  font-weight: bolder;
+  color: #8b5e34;
+  text-align: left;
+  margin-top: 30px;
+  }
+  
+  .ourstory-content p {
+  font-size: 1.2rem;
+  color: #8b5e34;
+  align-items: center;
+  letter-spacing: 0.5px;
+  font-family: "Poppins", sans-serif;
+  }
+  
+  .ourstory-img {
+  max-width: 50%;
+  }
+  
+  .ourstory-img img {
+  width: 100%;
+  border-radius: 8px;
+  height: auto;
+  }
+  
+  .branches_main{
+  width: 100%;
+  background-color: white;
+  }
+  
+  .branches {
+  width: 100%;
+  display: block;
+  padding-bottom: 50px;
+  margin: auto;
+  height: fit-content;
+  background-color: #fff;
+  }
+  
+  .branches h2 {
+  text-align: center;
+  font-size: 50px;
+  font-family: "Poppins", sans-serif;
+  }
+  
+  .branches-container{ 
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+      align-items: center;
+  gap: 50px;
+  margin: auto;
+  
+  margin-top: 50px;
+  }
+  
+  .img-back {
+  position: relative;
+  padding: 35px;
+  background-color: #c493593d;
+  border-radius: 40px;
+  overflow: hidden;
+  }
+  
+  .img-back img {
+  height: 200px;
+  width: 400px;
+  border-radius: 30px;
+  transition: transform 0.5s ease-in-out;
+  }
+  
+  .img-back:hover img {
+  transform: scale(1.1);
+  }
+  
+  .img-back .overlay {
+   
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-style: italic;
+  font-size: 12px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  }
+  .img-back .overlay h2{
+    font-size: 18px;
+  }
+  
+  .img-back:hover .overlay {
+  opacity: 1;
+  }
+  
+  .branches-container img:hover {
+  height: 200px;
+  width: 400px;
+  }
+  
+  .why-us {
+  width: 100%;
+  height: fit-content;
+  background-color: #F4E9DC;
+  margin-top: 50px;
+  margin-top: 30px;
+  }
+  
+  .block-section {
+  margin-top: 0;
+  width: 80%;
+  margin: auto;
+  }
+  
+  .why-us h2 {
+  color: #A17659;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  font-size: 50px;
+  }
+  
+  .quality {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  }
+  
+  .quality img {
+  margin-top: 15px;
+  height: 154px;
+  width: 154px;
+  }
+  
+  .whyus-peragraph {
+  width: 70%;
+  border-radius: 20px;
+  padding: 20px;
+  align-items: center;
+  background-size: auto;
+  background-color: #ffffff52;
+  border: 1px solid #A17659;
+  }
+  
+  .whyus-peragraph_img{
+  display: none;
+  }
+  
+  .whyus-peragraph_img1{
+  display: block;
+  }
+  .aboutus_main .contact-info {
+    background: #ede3d7;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    padding: 40px;
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s all ease-in-out;
+  }
+  .aboutus_main .contact-info:hover{
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); /* Subtle shadow effect */
+  }
+  
+  .aboutus_main .contact-info h2 {
+    font-size: 30px;
+    color: #A17659;
+    margin-bottom: 20px;
+  }
+  
+  .aboutus_main .contact-info p {
+    font-size: 18px;
+    color: #734825;
+    margin: 10px 0;
+  }
+  
+  .aboutus_main .contact-info p strong {
+    color: #A17659;
+  }
+  @media (max-width: 1080px){
+  .branches-container{
+    margin: 0;
+    justify-content: center;
+  }
+  .img-back .overlay{
+    opacity: 1;
+  }
+  .aboutus-header h1{
+    color: white;
+  -webkit-text-stroke: 1px black;
+    margin-top: 0;
+    left: 0;
+    top: 40%;
+  }
+  .aboutus_main .contact-info {
+    width: 90%;
+    padding: 20px;
+  }
+  }
+  
+  @media (max-width: 768px){
+  .ourstory-img img {
+   display: none;
+  }
+  .img-back {
+   padding: 0;
+   background-color: #c493593d;
+   border-radius: 40px;
+  }
+  .branches-container img {
+   width: 100%;
+  }
+  .branches {
+   width: 80%;
+  }
+  .branches-container {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   flex-wrap: wrap;
+   gap: 50px;
+   margin: auto;
+   margin-left: 0;
+   margin-top: 50px;
+  }
+  .ourstory-content {
+   width: 100%;
+   max-width: 100%;
+   padding-bottom: 30px;
+  }
+  .our-story {
+   width: 100%;
+   justify-content: center;
+   padding: 0px;
+  }
+  .our-story {
+   gap: 0px;
+  }
+  .ourstory-content h2 {
+   text-align: center;
+  }
+  .ourstory-content p {
+   text-align: center;
+  }
+  .aboutus-header {
+   display: block;
+   height: 16vh;
+  }
+  .img-back .overlay{
+    opacity: 1;
+  }
+  .aboutus-header h1 {
+    margin-right: 15px;
+  margin-top: 100px;
+  font-size: 70px;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  left: 16%;
+  top: 8%;
+   font-size: 31px;
+   position: absolute;
+   width: fit-content;
+   left: 50%;
+   top: 5%;
+  }
+  .whyus-peragraph_img1 {
+   display: none;
+  }
+  .whyus-peragraph_img {
+   display: block;
+  }
+  .block-section {
+   margin-top: 0;
+   width: 80%;
+   margin: auto;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 50px;
+  }
+  .whyus-peragraph {
+   background-color: #ffffff52;
+   border: 1px solid #A17659;
+   color: #A17659;
+   width: 70%;
+   border-radius: 20px;
+   padding: 20px;
+   align-items: center;
+   background-size: auto;
+   display: flex;
+   flex-direction: column;
+   backdrop-filter: blur(79px);
+  }
+  .aboutus_main .body1 .main {
+   width: -moz-fit-content;
+  
+   flex-direction: column;
+   justify-content: center;
+   height: -moz-fit-content;
+   height: fit-content;
+   gap: 0px;
+   padding: 50px;
+   padding-top: 0;
+  }
+  .aboutus_main .contact-info {
+    width: 70%;
+    padding: 20px;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+  }
+  }
+  @media(max-width:420px){
+    .branches h2{
+      font-size: 35px;
+    }
+    .aboutus_main h2,h1{
+      font-size: 30px;
+    }
+    .aboutus_main .contact-info {
+      width: 60%;
+      padding: 20px;
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+  

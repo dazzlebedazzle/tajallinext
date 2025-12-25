@@ -1,0 +1,19 @@
+Phase,Description,Time Allocation,Cost (INR)
+Requirements Gathering & Planning,"Initial meetings, project planning, requirements documentation",1 week,"₹5,000"
+Design,,,
+- UI/UX Design,"Creation of wireframes and mockups, client review and feedback",1 week,"₹4,000"
+- Final Design Approval,"Finalizing the design for both the website and the admin panel, preparing design assets for development",1 week,"₹6,000"
+Development,,,
+- Front-end Development,"HTML, CSS, JavaScript coding for website pages, responsive design implementation",2 weeks,"₹10,000"
+- Back-end Development,"PHP and MySQL development, setting up database schema, creating API endpoints",1 week,"₹8,000"
+- Admin Panel Development,"Developing admin panel for content management, user management, and site settings",1 week,"₹7,000"
+- Integration,"Integrating front-end with back-end, ensuring all functionalities work seamlessly together",1 week,"₹5,000"
+Testing,,,
+- Functional Testing,"Testing individual components and features, ensuring they work as intended",1 week,"₹4,000"
+- User Acceptance Testing (UAT),Conducting tests with the client to ensure the website meets all requirements and expectations,1 week,"₹4,000"
+Deployment,,,
+- Server Setup,"Configuring the live server, setting up the environment, and preparing for deployment",2 days,"₹2,000"
+- Deployment,"Deploying the website to the live server, ensuring smooth operation and addressing any immediate issues",3 days,"₹3,000"
+Support & Maintenance,,,
+- Initial Support,Providing support for any immediate post-deployment issues,1 week,"₹2,000"
+- Ongoing Maintenance,Regular updates and maintenance for one month,1 week,"₹2,999"

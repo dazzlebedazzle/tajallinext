@@ -1,0 +1,139 @@
+/* Container and layout */
+.container1 {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.container2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.container2 h2 {
+  font-size: 2rem;
+  color: #723207;
+  margin: 0;
+}
+
+.container2 hr {
+  width: 60px;
+  border: 2px solid #723207;
+  margin: 10px auto;
+}
+
+/* Swiper */
+.swiper-container {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.mySwiper {
+  width: 100%;
+  height: auto;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #723207;
+}
+
+.swiper-pagination-bullet {
+  background: #723207;
+  opacity: 0.4;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Card styles */
+.testimonial {
+  background-color: #F4E9DC;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 95%;
+  margin: auto;
+}
+
+.testimonial:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.testimonial h2 {
+  font-size: 1.2rem;
+  color: #723207;
+  margin: 10px 0 5px;
+}
+
+.testimonial p {
+  font-size: 0.95rem;
+  margin: 10px 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Responsive image inside card */
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid #723207;
+  object-fit: cover;
+}
+
+.rating {
+  width: 100px;
+  height: auto;
+  margin-top: 10px;
+}
+
+/* Responsive typography and layout */
+@media (max-width: 1024px) {
+  .testimonial h2 {
+    font-size: 1.1rem;
+  }
+  .testimonial p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonial {
+    padding: 15px;
+  }
+  .profile-img {
+    width: 80px;
+    height: 80px;
+  }
+  .rating {
+    width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial {
+    padding: 10px;
+  }
+  .testimonial h2 {
+    font-size: 1rem;
+  }
+  .testimonial p {
+    font-size: 0.85rem;
+  }
+  .profile-img {
+    width: 70px;
+    height: 70px;
+  }
+  .rating {
+    width: 70px;
+  }
+}

@@ -1,0 +1,101 @@
+/* RegistrationSuccess.css */
+
+.registration-success-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  
+  background: url('../../../public/assets/login_bg.webp');
+  background-color: #F4E9DC;
+}
+
+.registration-success-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+  padding: 40px 20px;
+}
+
+.success-content {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.success-content h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.success-content p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  color: #666;
+}
+.check-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background-color: #28a745;
+  animation: scaleIn 0.5s ease-in-out;
+}
+
+.check-mark {
+  width: 40px;
+  height: 20px;
+  border-left: 5px solid white;
+  border-bottom: 5px solid white;
+  transform: rotate(-45deg);
+  animation: drawCheck 0.5s ease forwards;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes drawCheck {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  50% {
+    width: 40px;
+    height: 0;
+  }
+  100% {
+    width: 40px;
+    height: 20px;
+  }
+}
+
+.login-button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 4px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #218838;
+}
+

@@ -1,0 +1,77 @@
+.swiper-container3{
+    width: 60%;
+    margin-left: 20%;
+    
+    
+  }
+  .swiper-container3 .swiper{
+    height:fit-content;
+    border-radius: 50px;
+    background-color: #dcc0a947;
+  }
+  .swiper-container3  .swiper:hover{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+  }
+  .swiper-container3  .swipe >img{
+    border-radius: 50px;
+  }
+  .swiper-container3  .swipe button{
+  font-size: 20px;
+  margin-Top: 20px;
+  background:transparent;
+  border:0;
+  color:brown;
+  }
+  .swiper-container3  .swipe button:hover{
+    color: black;
+  
+  }
+  .swiper-container3 .swiper-pagination {
+    position: absolute;
+    top:97%;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: -10px;
+  }
+  
+  .swiper-container3 .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: rgb(105, 52, 52);
+    opacity: 0.8;
+    margin: 0 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .swiper-container3  .swipe .arr{
+    margin-Left:5px;
+    margin-Bottom:-4px;
+  }
+  .swiper-container3  .swipe .arr:hover{
+    cursor: pointer;
+  }
+  
+  .swiper-container3 .swiper-pagination-bullet-active {
+    opacity: 1;
+    background-color: brown;
+    width: 15px;
+    height: 15px;
+  }
+  
+  
+  @media (max-width: 768px){
+    .swiper-container3{
+      width: 95%;  
+      margin-left: 2%;
+      margin-top: 5%;
+      
+    }
+    .swiper-container3  .swiper{
+      height: fit-content;
+      background-color:#dcc0a947;
+    }
+  }

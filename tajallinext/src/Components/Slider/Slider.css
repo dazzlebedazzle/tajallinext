@@ -1,0 +1,146 @@
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Customize dot styles */
+.slick-dots li button:before {
+  color: #000000; /* Change dot color */
+  font-size: 8px;
+}
+
+/* Customize active dot style */
+.slick-dots li.slick-active button:before {
+  color: #723207; /* Change active dot color */
+  font-size: 15px;
+}
+
+.slider-container {
+  width: 100%;
+  margin: 0px auto;
+  position: relative;
+}
+
+.slider-container .slick-slide img {
+  display: block;
+  margin: auto;
+  width: 100%;
+  object-fit: cover;
+}
+
+.btn2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%; /* Ensure it takes full height */
+}
+
+.btn2 img {
+  width: 100%; /* Make image responsive */
+  height: auto;
+  object-fit: 'cover'
+}
+.sidebar-title h2{
+  background-color: #723207;
+  padding: 5px;
+  border-radius: 5px;
+  color: #ffeedc;
+  font-size: 25px;
+}
+.btn2 button {
+  position: absolute;
+  bottom: 15%; /* Adjust bottom position */
+  left: 26%;
+  transform: translateX(-50%);
+  background-color: #DCC0A9;
+  color: #723207;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px; /* Default font size */
+  cursor: pointer;
+  z-index: 1;
+  border: 2px solid #A17659;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn2 .btn3 {
+  background-color: rgb(162, 223, 162);
+  border: 2px solid green;
+  color: #690B17;
+  left: 29%;
+  
+ 
+}
+
+.btn2 .btn4 {
+  background-color: #6D6F7B;
+  border: 2px solid black;
+  color: black;
+  left: 29%;
+}
+
+.btn2 .btn5 {
+  background-color: pink;
+  border: 2px solid rgb(1, 43, 10);
+  color: rgb(1, 43, 10);
+  left: 29%;
+}
+
+.btn2 button:hover {
+  background-color: #723207;
+  color: #DCC0A9;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Styling for the slider container on smaller screens */
+@media (max-width: 768px) {
+  .slider-container {
+    margin-top: 0px;
+  }
+
+  .btn2 button {
+    font-size: 14px; /* Adjust font size for smaller screens */
+    padding: 8px 16px; /* Adjust padding for smaller screens */
+  }
+
+  .btn2 button {
+    bottom: 10%; /* Adjust button position */
+    width: 50%; /* Adjust width for better fit */
+  }
+
+  .slick-dots {
+    bottom: -27px; /* Adjust dots position */
+  }
+}
+
+@media (max-width: 480px) {
+  .btn2 button {
+    font-size: 12px; /* Further reduce font size */
+    padding: 6px 12px; /* Further adjust padding */
+  }
+
+  .btn2 button {
+    bottom: 1%; /* Further adjust button position */
+    width: 60%; /* Adjust width for very small screens */
+  }
+
+  .slick-dots {
+    bottom: -40px; /* Adjust dots position */
+  }
+}
+@media (max-width: 1280px) {
+  .sidebar-title h2{
+    font-size: 20px;
+  }
+
+}
+
+@media (max-width: 1050px) {
+  .sidebar-title h2{
+    font-size: 12px;
+  }
+
+}

@@ -1,0 +1,86 @@
+/* src/Component/InfoSection.css */
+.info-section_main
+{
+    margin-top: 50px;
+    text-align: center;
+}
+
+.info-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(68, 8, 8); /* or any color you prefer */
+    padding: 40px;
+    border-radius: 10px;
+    width: 90%;
+    height: fit-content;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 50px;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff; /* Text color */
+    text-align: center;
+    width: 20%; /* Adjust the width as needed */
+  }
+  
+  .info-icon >img{
+    width: 50px; /* Size of the icon */
+    margin-bottom: 10px;
+    animation: bounce 2s infinite; /* Add animation */
+    height: auto;
+  }
+  
+  .info-text {
+    font-size: 14px;
+    width: 50%;
+  }
+  
+  .info-divider {
+    width: 2px;
+    height: 60px; /* Adjust the height as needed */
+    background-color: #fff; /* Line color */
+    margin: 0 10px; /* Adjust spacing as needed */
+    filter: blur(2px);
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-20px);
+    }
+    60% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @media (max-width:1080px){
+    .info-section {
+      width: 85%;
+    }
+  }
+  @media (max-width:768px){
+    .info-section{
+        flex-direction: column;
+        width: 80%;
+        padding: 20px;
+    }
+    .info-item{
+        width: 100%;
+    }
+    .info-divider {
+        width: 50%;
+        height: 2px; /* Adjust the height as needed */
+        background-color: #fff; /* Line color */
+        margin: 0 10px; /* Adjust spacing as needed */
+        filter: blur(2px);
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+  }

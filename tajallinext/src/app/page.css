@@ -1,0 +1,276 @@
+
+.home .first{
+    background: url('../../public/assets/background.webp');
+    background-size:cover;
+    background-repeat: no-repeat;
+    height: fit-content;
+    margin-top: 0;
+   display: block;
+
+   
+    
+}
+
+
+.slick-slider{
+  font-display: swap;
+}
+/* Prevent font loading by removing pseudo-element content */
+.slick-prev::before,
+.slick-next::before {
+  font-family: none !important;
+  content: '' !important; /* or use icons like ← → */
+  font-size: 24px;
+  line-height: 1;
+  color: #000;
+}
+.home .second {
+    background-color: #DCC0A9;
+    width: 100%;
+    margin-top: 0px;
+    padding-top: 20px;
+    margin-top: 20px;
+    /* Remove fixed height to allow it to fit content */
+    /* height: 135vh; */
+  }
+  .home .second2{ 
+    background: url('../../public/assets/dr2.webp');
+    background-color: #DCC0A9;
+    background-size: cover;
+    background-blend-mode:soft-light;
+    width: 100%;
+    margin-top: 0px;
+    padding-top: 20px;
+    margin-top: 20px;
+ 
+
+
+  }
+  .home .second3{ 
+    
+    background-color: #DCC0A9;
+    background-size: cover;
+    background-blend-mode:soft-light;
+    width: 100%;
+    margin-top: 0px;
+    padding-top: 20px;
+    margin-top: 20px;
+ 
+
+
+  }
+  .home .second4{ 
+   background: transparent;
+    background-size: cover;
+    background-blend-mode:soft-light;
+    width: 100%;
+    margin-top: 0px;
+    padding-top: 20px;
+    margin-top: 20px;
+ 
+
+
+  }
+  .home .second5{ 
+    background-color: #DCC0A9;
+     background-size: cover;
+     background-blend-mode:soft-light;
+     width: 100%;
+     margin-top: 0px;
+     padding-top: 20px;
+     margin-top: 20px;
+  
+ 
+ 
+   }
+
+  
+ .top {
+    width: 100%;
+    /* margin-top: 0; */
+    margin-top: 0px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1;
+    /* Use relative positioning to avoid overlap */
+    position: relative;
+    height: fit-content;
+    
+        margin-top: 20px;
+        text-align: center;
+    
+  }
+  
+  .top .tittle {
+    font-size: 25px;
+    font-weight: bolder;
+    float: left;
+    margin-left: 20px;
+    color: #723207;
+    height: fit-content;
+  }
+  
+  .top a{
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+  }
+  .top button {
+    margin-right: 20px;
+    float: right;
+    background-color: #723207;
+    color: white;
+   
+    font-size: 20px;
+
+    padding: 10px 35px 10px 35px;
+    border-radius: 50px;
+    border: 0;
+    transition: all 0.3s ease-in-out;
+    height: fit-content;
+  }
+  
+  .top button:hover {
+    background-color: #A17659;
+
+    border: 1px solid #723207;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .top .tittle hr {
+    border: 2px solid #723207;
+    width: 60%;
+    margin: 10px auto;
+    float: left;
+  }
+ 
+  .delicacies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 98%;
+    margin: auto;
+    margin-top: 50px;
+    /* Use relative positioning to avoid overlap */
+    position: relative;
+  }
+  
+.third{
+    height:fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    
+ 
+}
+.fourth{
+   
+    
+    background-color: #DCC0A9;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.fifth{
+    width: 100%;
+   
+}
+.withus_home{
+   
+    background-color:  #DCC0A9;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.home .body1 .main{
+    background-color:#DCC0A9 ;
+}
+
+.branch_sec{
+    margin-top: 50px;
+    text-align: center;
+    margin-bottom: 50px
+  
+}
+.branch_sec .heading{
+    font-size: 35px;
+    color: #723207;
+    margin-bottom: 20px;
+}
+.branch_sec hr{
+    border: 2px solid #723207;
+     width: 15%;
+      margin: 10px auto;
+       
+      
+}
+.offer_home{
+    width: 100%;
+    height: fit-content;
+}
+.nth{
+  min-height: 170px;  /* Ensures space is reserved */
+  overflow: hidden;  /* Prevents unexpected scroll */
+}
+@media (max-width: 768px){
+    .home .first{
+        height: fit-content;
+    }
+
+    .top button{
+        
+       
+       font-size: 15px;
+        margin-top: 0px;
+    
+    }
+        
+    
+    .top .tittle{
+        
+        font-size: 20px;
+        margin-top: 8px;
+       
+    }
+  
+   
+    .btn2 button{
+        font-size: 11px;
+        width: 25%;
+        padding: 3px;
+       
+    }
+    .custom-slick-track {
+        height: fit-content;
+    }
+    .home .second {
+        height: fit-content;
+    }
+    .home .second2 {
+        height: fit-content;
+    }
+    .fourth {
+        margin-top: 0px;
+
+   
+    }
+
+    .delicacies{
+
+        width: 100%;
+        gap: 0px;
+        justify-content: space-evenly;
+    }
+
+    
+    
+}
+
+@media (max-width: 768px){
+  .top .tittle{
+    font-size: 18px;
+  }
+}

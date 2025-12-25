@@ -1,0 +1,27 @@
+.image{
+    width: 80%;
+    margin-bottom: 30px;
+    height: auto;
+}
+.imagebox{
+    display: flex;
+    justify-content: center;
+    align-items: centerc;
+}
+.blog_box{
+    width: 70%;
+}
+.blog_container{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+@media (max-width: 900px) {
+    .blog_box{
+        width: 90%;
+    }
+
+}
+

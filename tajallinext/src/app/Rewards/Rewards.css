@@ -1,0 +1,71 @@
+.rewardbanner{
+    object-fit: cover;
+    height: auto;
+    width: 100%;
+}
+.banner-box{
+    width: 100%;
+    position: relative;
+}
+.refral-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 10px;
+}
+.refral-box img{
+    background-color: #66339930;
+    padding: 10px;
+    border-radius: 50%;
+    width: 40%;
+    height: auto;
+}
+.refral-box p{
+    font-weight: 700;
+    margin-top: 10px;
+}
+.refral-box span{
+    font-weight: 400;
+}
+.whatapplink{
+    display: flex;
+    align-items: center;
+    background-color: #2e6c2e;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+.sharelink{
+    display: flex;
+    align-items: center;
+    background-color: #515151;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+.sharelink img{
+    width: 10%;
+    height: auto;
+}
+.sharelink p{
+    font-size: 15px;
+    margin-bottom: 0;
+    color: #fff;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.whatapplink img{
+    width: 10%;
+    height: auto;
+}
+.whatapplink p{
+    font-size: 15px;
+    margin-bottom: 0;
+    color: #fff;
+    font-weight: 600;
+    margin-left: 10px;
+}

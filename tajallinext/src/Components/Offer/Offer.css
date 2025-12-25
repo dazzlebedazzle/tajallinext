@@ -1,0 +1,114 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+}
+
+.Wpp {
+  width: 80%;
+  padding: 20px 0;
+  margin: 0 auto;
+  position: relative;
+}
+
+.contain {
+  margin-top: 0px;
+}
+
+/* Hide unwanted text in default slick arrows */
+.slick-prev::before,
+.slick-next::before {
+  content: "";
+}
+
+/* Dots styling */
+.Wpp .slick-dots {
+  bottom: 0px;
+}
+.Wpp .slick-dots li button:before {
+  color: #665353;
+  font-size: 8px;
+}
+.Wpp .slick-dots li.slick-active button:before {
+  color: #723207;
+  font-size: 15px;
+}
+
+/* Slides transition effect */
+.Wpp .slide {
+  transition: transform 300ms, opacity 300ms;
+  opacity: 0.7;
+  padding: 0 10px;
+  overflow: hidden;
+  transform: scale(0.8);
+}
+.Wpp .activeSlide {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Center slide content vertically */
+.Wpp .slick-track {
+  display: flex;
+  align-items: center;
+}
+
+/* Custom arrow styling */
+.slick-prev,
+.slick-next {
+  z-index: 10;
+  top: 40%;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.slick-prev {
+  left: -45px;
+}
+
+.slick-next {
+  right: -45px;
+}
+
+/* Responsive styling */
+@media (max-width: 1080px) {
+  .Wpp {
+    width: 90%;
+  }
+  .contain {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .Wpp {
+    width: 100%;
+    padding: 0;
+  }
+  .contain {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Wpp .slide,
+  .Wpp .activeSlide {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+

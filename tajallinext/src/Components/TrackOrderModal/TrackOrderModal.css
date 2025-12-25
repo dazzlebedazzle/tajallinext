@@ -1,0 +1,136 @@
+/* TrackOrderModal.css */
+
+.track-order-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInModal 0.3s ease; /* Fade-in animation */
+  box-shadow: 0 0 4px 0;
+}
+
+@keyframes fadeInModal {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.track-order-modal .modal-content {
+  width: 400px;
+  max-width: 90%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Box shadow for depth effect */
+  animation: slideInUp 0.3s ease; /* Slide-in animation */
+  position: relative; /* Add relative positioning for the close button */
+  
+}
+
+@keyframes slideInUp {
+  from {
+      transform: translateY(-50px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+.track-order-modal h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333; /* Example: Dark grey color */
+  text-align: center; /* Center align heading */
+}
+
+.track-order-modal .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px; /* Width of the close button */
+  height: 24px; /* Height of the close button */
+  background-color: #000; /* Black background color */
+  color: #fff; /* White text color */
+  border: none;
+  border-radius: 4px; /* Slight rounding of the edges */
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* Remove padding */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.track-order-modal .close-button .close-icon {
+  display: inline-block;
+  font-size: 16px;
+}
+
+.track-order-modal .close-button:hover {
+  background-color: #333; /* Darker background color on hover */
+}
+
+.track-order-modal .track-option {
+  margin-bottom: 20px;
+}
+
+.track-order-modal .track-option label {
+  display: block;
+  margin-bottom: 10px;
+  color: #555; /* Example: Dark grey color */
+}
+
+.track-order-modal .track-option input[type="radio"] {
+  margin-right: 10px;
+  cursor: pointer;
+  background-color: #A17659;
+}
+
+.track-order-modal input[type="text"] {
+  width: calc(100% - 20px); /* Adjusted width with padding */
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease; /* Smooth border color transition */
+  border-radius: 30px;
+  box-shadow: 0 0 4px 0;
+}
+
+.track-order-modal input[type="text"]:focus {
+  outline: none;
+  border-color: #A17659; /* Example: Blue border color on focus */
+}
+
+.track-order-modal .track-button {
+  padding: 12px 20px;
+  background-color: #2C1907; /* Blue background color */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  border-radius: 30px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+  transition: all 0.5ms ease-in;
+}
+
+.track-order-modal .track-button:hover {
+  background-color: #A17659; /* Darker blue background color on hover */
+}
+
+

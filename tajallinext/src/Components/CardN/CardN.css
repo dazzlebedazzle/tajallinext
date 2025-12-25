@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .offer1 {
+    display: inline-block;
+    width: fit-content;
+    margin: 30px;
+    position: relative;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .offer1 #straw {
+    width: 250px;
+    border-radius: 30px;
+    height: auto;
+  }
+  
+  .offer1 #off {
+    width: 100px;
+    position: absolute;
+    top: -30px;
+    left: -30px;
+  }
+  
+  .overlay-text {
+    position: absolute;
+    top: -10px; /* Adjust as needed */
+    left: -10px; /* Adjust as needed */
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  
+    
+    pointer-events: none; /* Prevents the text from interfering with button clicks */
+  }
+  .offer1 .overlay-text .per_off{
+    font-size: 30px;
+ 
+
+  }
+  
+  .offer1 button {
+    position: absolute;
+    top: 80%;
+    left: 23%;
+    outline: none;
+    border: 0;
+    font-size: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #6b72ff, #656cf0, #742b1d, #4d1403);
+    background-size: 200% 200%;
+    border: 2px solid #723207;
+    color: white;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: background-position 0.5s, transform 0.5s;
+    font-weight: bold;
+  }
+  
+  .offer1 button:hover {
+    background-position: 100% 0;
+    transform: scale(1.05);
+  }
+  @media (max-width: 1080px) {
+    .offer1 button {
+      background-color: #723207;
+    }
+    .offer1 {
+      padding: 20px;
+    }
+    .offer1 #straw {
+      width: 300px;
+      border-radius: 30px;
+  }
+  .offer1 button{
+    width: 51%;
+    font-size: 2vw;
+    
+      width: 51%;
+      font-size: 12px;
+      top: 76%;
+  }
+}
+  
+  @media (max-width: 768px) {
+    .offer1 button {
+      background-color: #723207;
+    }
+    .offer1 {
+      padding: 20px;
+    }
+    .offer1 #straw {
+      width: 200px;
+      border-radius: 30px;
+  }
+  .offer1 button{
+    width: 51%;
+    font-size: 2vw;
+    
+      width: 51%;
+      font-size: 12px;
+      top: 76%;
+  }
+}
+    
+  
+  
+  @media (max-width: 480px) {
+  .offer1 {
+    display: inline-block;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 30px;
+    margin-left: 18%;
+    position: relative;
+    text-align: center;
+    padding: 20px;
+} 
+.offer1 button{
+  
+  font-size: 12px;
+  
+}
+
+  .offer1 #straw {
+    width: 200px;
+  }
+  .offer1 #off {
+    width: 80px;}
+    .overlay-text {
+      font-size: 16px;
+    }
+    .offer1 .overlay-text .per_off {
+      font-size: 24px;
+  }
+
+}
+  
+@media (max-width: 345px) {
+  .offer1 {
+    display: inline-block;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 30px;
+    margin-left: 9%;
+    position: relative;
+    text-align: center;
+    padding: 20px;
+} 
+}

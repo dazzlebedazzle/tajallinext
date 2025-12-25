@@ -1,0 +1,679 @@
+/* Basic styles */
+body {
+  margin: 0;
+  font-family: 'poppins', sans-serif;
+}
+
+.navbar {
+  background-color: #F4E9DC;
+  color: black;
+  /* padding: 10px 20px; */
+  position: sticky;
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+.dropdown-content ul{
+  padding: 0;
+}
+
+.navbar .navbar-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+ 
+}
+/* .navbar  .logo {
+  width: 100%;
+ 
+} */
+
+.cart{
+  cursor: pointer;
+}
+.navbar .navbar-container i{
+display: none;
+}
+.navbar  .navbar-container li .search{
+  display: none;
+}
+.navbar  .navbar-menu {
+  display: flex;
+}
+
+.navbar  .navbar-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navbar  .navbar-links li {
+  margin-left: 17px;
+  
+
+}
+
+.navbar  .navbar-links a {
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+}
+.navbar  .navbar-links li :hover{
+  color: #53290c;
+}
+
+
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  
+}
+.dorpdownnav{
+  height: auto;
+}
+.navbar-toggle-icon {
+  background-color: #53290c;
+  width: 25px;
+  height: 3px;
+  margin: 4px 0;
+}
+.navbar .main-div{ width: 42%;
+  display: flex;
+  gap: 25px;
+   padding: auto;
+}
+.navbar  .search{
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}
+.navbar .search-box {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  /* border: 1px solid #ccc; */
+  border-radius: 4px;
+  padding: 12px;
+  background-color: #DCC0A9;
+  position: relative;
+  border-radius: 50px 10px 10px 50px;
+  width: 100%;
+
+ 
+}
+.navbar .search-box:hover .search-icon3{
+  color:#53290c ;
+  
+}
+
+.navbar  .search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding-left: 30px; /* Space for the icon */
+  background-color: #DCC0A9;
+  caret-color: white;
+}
+
+.navbar  .search-input::placeholder{
+color: white;
+}
+
+.navbar  .search-icon{
+  position: absolute;
+  left: 10px;
+  color: #A17659;
+  cursor: pointer;
+
+}
+
+.navbar  .search-button {
+  background-color: #A17659;
+  color: #F4E9DC;
+  border: none;
+  
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 10px 50px 50px 10px;
+
+}
+
+.navbar  .search-button:hover {
+  background-color: #53290c;
+ 
+}
+.navbar  .iconsmain{
+  display: flex;
+  gap: 25px;
+  margin: auto;
+  margin-right: 50px;
+
+
+}
+
+.navbar  .iconsmain .cart, .account{
+  color: #A17659;
+  font-size: 30px;
+  position: relative;
+  
+}
+.navbar  .iconsmain .cart:hover{
+  color: #573015;
+  
+}
+.navbar  .iconsmain .account:hover{
+  color: #573015;
+}
+.cart-count {
+  position: absolute;
+  top: 5%;
+  background-color: rgb(69, 12, 12);
+  border: 1px solid rgb(69, 12, 12) ;
+  color: white;
+  border-radius: 50%;
+  font-size: 15px;
+  padding-left: 9px;
+  padding-right: 9px;
+}
+.cart-count:hover{
+  color: #53290c;
+  background-color: white;
+  
+}
+.navbar .profile-picture  {
+  width: 30px;  /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+  border-radius: 50%;
+
+}
+.navbar   #close{
+  display: none;
+}
+.close_li{
+  display: none;
+}
+.navbar-links li .active {
+  color: #53290c;
+  font-weight: bold;
+  
+ 
+}
+
+/* Add this CSS to Navbar.css */
+
+/* Dropdown container */
+.navbar .dropdown {
+position: relative;
+display: inline-block;
+}
+
+/* Dropdown content (hidden by default) */
+.navbar .dropdown-content {
+display: none;
+position: absolute;
+gap: 30px;
+padding: 20px;
+padding-right: 50px;
+background-color: #f9f9f9ee;
+min-width: 180px;
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+z-index: 1;
+justify-content: space-around;
+opacity: 0;
+transform: translateY(-20px);
+transition: opacity 0.8s ease, transform 0.8s ease;
+
+}
+
+/* Links inside the dropdown */
+.navbar .dropdown-content li{
+color: black;
+padding: 8px 10px;
+text-decoration: none;
+display: block;
+width: 150px;
+cursor: pointer;
+}
+
+/* Change color of dropdown links on hover */
+
+
+.navbar .dropdown-content  img{
+width: 200px;
+height: 200px;
+margin: auto;
+}
+/* Show the dropdown content on hover */
+.navbar .dropdown:hover .dropdown-content {
+display: flex;
+opacity: 1;
+transform: translateY(0);
+}
+@keyframes dropdownAppear {
+from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+
+.navbar .dropdown-content {
+animation: dropdownAppear 0.3s ease-out;
+}
+.navbar-links .cart_nav,.account1{
+display: none;
+}
+.search_res{
+display: none;
+}
+.navbar .logo{
+width: 100%;
+height: auto;
+}
+.navbar .mylogo{
+width: 12%;
+}
+.navbar .logo {
+width: 100%;
+
+}
+.navbar .navbar-container .search-icon3{
+font-size: 24px;
+color:#573015;
+cursor: pointer;
+display: none;
+}
+.navi{
+
+display: none;
+
+  justify-content: space-between;
+  align-items: center;
+}
+.navi .iconsmain{
+display: none;
+}
+.search45{
+display: none;
+}
+.main_navi{
+display: none;
+justify-content: space-around;
+width: 95%;
+}
+.search45  .search-box {
+padding: 0;
+width: 80%;
+border-radius: 5px;
+}
+.search45  .search-button{
+border-radius: 5px;
+}
+.search45 .search-button {
+border-radius: 0px 20px;
+}
+
+/* Responsive styles */
+@media (max-width: 1080px) {
+  #res_logo{
+    display: none;
+  }
+  .navbar .navbar-container {
+    flex-direction: column;
+    width: 100%;
+  }
+  .main_navi{
+    display: flex;
+    justify-content: space-evenly;
+    margin: inherit;
+  }
+  .navi{
+    display: flex;
+  }
+  .navi .iconsmain{
+    display: flex;
+  }
+  .logo.hidden{
+    display: none;
+  }
+  .mylogo.hidden {
+    display: none;
+    transition: opacity 0.3s all ease-in-out;
+  }
+  .mylogo{
+    display: block;
+  }
+  
+  .search45{
+    display: flex;
+    gap: 10px;
+    width: 80%;
+    justify-content: space-around;
+    transition: opacity 0.5s all ease-in-out;
+  }
+ 
+  .navbar .navbar-links {
+    justify-content:flex-start;
+  }
+ 
+  .navbar .dropdown:hover .dropdown-content {
+    display: none;
+  }
+  .navbar .logo {
+    width: 230%;
+   
+  }
+  .navbar-menu.active {
+    right: 0;
+  }
+  .navbar  .main-div{
+    display: none;
+   }
+   .navbar  .navbar .logo{
+    width: 35%;
+    
+   }
+  .navbar-links {
+ 
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 9px;
+    z-index: 999;
+    position: fixed;
+    height: 100vh;
+    width: 300px;
+    top: 0;
+    right: -400px;
+    background-color: #532a0cdb;
+    background-image: url('../../../public/assets/background.webp'); /* Replace with your image path */
+    /* opacity: 0.8; */
+     background-size: cover; /* Adjust to 'contain' or custom sizes as needed */
+     background-position: center center; /* Adjust position if necessary */
+     background-repeat: no-repeat;
+     
+     
+     
+    /* background-color: #A17659; */
+    box-shadow: 0 40px 60px rgba(0,0,0, 0.1);
+    padding : 80px 0 0 10px ;
+    margin-top: 0;
+    transition: 0.3s;
+  }
+  .navbar-links.active {
+    right: 0;
+  }
+
+  .navbar-links li {
+    margin: 10px 0;
+  }
+
+  .navbar-toggle.active {
+    display: flex;
+  }
+  .navbar-toggle {
+    display: flex;
+  }
+  .navbar  #close{
+    display: initial;
+  }
+  .navbar-container i{
+    display:initial;
+    font-size: 30px;
+    color: black;
+  }
+  .navbar-container li .search{
+    display: flex;
+  }
+      
+.navbar .navbar-links li {
+color: #dad5d5;
+text-decoration: none;
+font-size: 18px;
+}
+.navbar-links li a .active {
+color: #53290c;
+font-weight: bold;
+
+
+}
+.navbar-links .cart_nav,.account1{
+display: initial;
+background: transparent;
+font-size: 32px;
+
+}
+.search_res{
+display: initial;
+}
+.search-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+
+z-index: 1000;
+}
+
+.overlay-search-box {
+background-color: white;
+padding: 20px;
+border-radius: 5px;
+display: flex;
+align-items: center;
+}
+
+.close-icon {
+cursor: pointer;
+margin-left: 10px;
+color: gray;
+}
+.navbar .search-box_res {
+margin-top: 4px;
+display: flex;
+/* gap: 5px; */
+align-items: center;
+/* border: 1px solid #ccc; */
+border-radius: 4px;
+padding: 12px;
+/* background-color: #DCC0A9; */
+position: relative;
+/* border-radius: 50px 10px 10px 50px; */
+width: 100%;
+font-size: 32px;
+}
+.res_search_ham{
+display: flex;
+gap: 32px;
+}
+.search-box_res  .search-overlay{
+width: 100%;
+}
+.search-box-overlay-search-box2{
+width: 70%;
+background-color: #d7d7d7;
+height: fit-content;
+display: flex;
+padding: 5px 20px;
+position: absolute;
+top: 7%;
+justify-content: space-between;
+border-radius: 5px;
+
+}
+.search-box-overlay-search-box2 input[type='text']{
+border: none;
+background: transparent;
+
+}
+.navbar .navbar-links a {
+  font-weight: bold;
+  color: #000000;
+  text-decoration: none;
+  font-size: 24px;
+}
+.navbar-links li .active {
+color: #53290c;
+font-weight: bold;
+
+
+}
+
+.navbar .mylogo{
+width: 20%;
+
+align-items: center;
+justify-content: center;
+}
+.navbar .logo {
+width: 100%;
+
+}
+.navbar  .search-icon{
+
+right: 41px;
+}
+.navbar .navbar-container .search-icon3{
+display: block;
+}
+.close_li{
+display: initial;
+}
+.navbar  .navbar-links #close{
+background-color: #532a0c00;
+color: white;
+border: 0;
+font-size: 25px;
+border: 2px solid saddlebrown;
+background-color: #4f2100;
+padding: 4px 8px 0px 8px;
+/* padding-bottom: 0px; */
+border-radius: 7px;
+cursor: pointer;
+}
+.navbar  .navbar-links #close:hover{
+color: brown;
+background-color: white;
+}
+.navbar{
+height: fit-content;
+}
+.res_search_ham{
+display: none;
+}
+.search45.hidden{
+display: none;
+}
+.profile-picture2.hidden{
+display: none;
+}
+.main_navi, .navi, .navi .iconsmain {
+display: flex;
+gap: 18px;
+justify-content: space-evenly;
+}
+.main_navi, .navi, .navi .iconsmain {
+display: flex;
+justify-content: space-evenly;
+margin: inherit;
+}
+.navbar .search-input, .search45 .search-box {
+width: 90%;
+border-radius: 20px;
+}
+}
+@media (max-width: 768px){
+.navbar .logo{
+  width: 100%;
+}
+.navbar .mylogo{
+  width: 30%;
+}
+.navbar .logo {
+  width: 100%;
+ 
+}
+.navbar{
+  height: fit-content;
+}
+.navbar .search-input, .search45 .search-box {
+  width: 90%;
+  border-radius: 20px;
+}
+
+}
+@media (max-width: 480px){
+
+.navbar .mylogo{
+  width: 40%;
+}
+.navbar .logo {
+  width: 100%;
+ 
+}
+.navbar-container .search45{
+  width: 90%;
+}
+.search45 .search-box {
+  width: 65%;
+}
+.navbar .search-input{
+  width: 65%;
+}
+.navbar{
+  height: fit-content;
+}
+.profile-picture2.hidden{
+  display: none;
+}
+.navbar .search-input, .search45 .search-box {
+  width: 90%;
+  border-radius: 20px;
+}
+}
+@media (max-width: 330px){
+
+.navbar .mylogo{
+  width: 35%;
+}
+.navbar .logo {
+  width: 100%;
+ 
+}
+.navbar-container .search45{
+  width: 90%;
+}
+.search45 .search-box{
+  width: 90%}
+.navbar{
+  height: fit-content;
+  
+}
+.navbar-container .search45{
+  justify-content: center;
+}
+.navbar .search-input{
+  width: 80%;
+}
+.profile-picture2.hidden{
+  display: none;
+}
+}
+

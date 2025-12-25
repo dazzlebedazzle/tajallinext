@@ -1,0 +1,12 @@
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #DCC0A9;
+}
+
+/* Additional styling for the dashboard components can be added here */

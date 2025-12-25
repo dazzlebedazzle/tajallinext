@@ -1,0 +1,196 @@
+/* General container styling */
+.categories-container {
+  margin-left: 300px;
+  padding: 20px;
+  background-color: #DCC0A9;
+}
+
+.add-category-btn {
+  background-color: #723207;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* Popup styling */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-box {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+    height: fit-content;
+  max-height: 80%; /* Limit height to 80% of viewport */
+  overflow-y: auto; /* Enable vertical scrolling */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-50px); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50px); }
+}
+
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.popup-box h3 {
+  margin-bottom: 20px;
+}
+
+.popup-box form {
+  display: grid;
+  gap: 10px;
+}
+
+.popup-box form input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.popup-box form button {
+  background-color: #723207;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.popup-box form button:hover {
+  background-color: #501d05;
+}
+
+/* Category list styling */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.category-item {
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-btn, .delete-btn {
+  background-color: #723207;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  background-color: #501d05;
+}
+
+/* Responsive styles */
+
+
+@media (max-width: 1080px) {
+  .categories-container {
+    margin-left: 0px; /* Adjust sidebar width for smaller tablets */
+    padding: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .categories-container {
+    margin-left: 0; /* No margin on mobile */
+    padding: 10px;
+  }
+  .categories-container h2{
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .popup-box {
+    width: 90%; /* Adjust popup width for mobile */
+    padding: 15px; /* Reduce padding for mobile */
+  }
+
+  .add-category-btn {
+    width: 100%; /* Full width button on mobile */
+    text-align: center;
+  }
+
+  .category-item {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .category-actions {
+    margin-top: 10px; /* Add margin for better spacing */
+  }
+}
+
+@media (max-width: 576px) {
+  .categories-container {
+    padding: 5px;
+    
+      margin-left: 0; 
+  }
+
+  .category-item {
+    padding: 10px;
+  }
+
+  .popup-box {
+    padding: 10px; /* Further reduce padding for smaller screens */
+  }
+
+  .popup-box form input {
+    width: 100%; /* Full width inputs on smaller screens */
+  }
+}
+
+  
+  /* @media (max-width: 768px) {
+    .categories-container {
+      margin-left: 0; 
+      
+    }
+  } */

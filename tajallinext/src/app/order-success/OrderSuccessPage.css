@@ -1,0 +1,154 @@
+/* src/pages/OrderSuccessPage.css */
+
+@keyframes checkmark {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.order-success-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: url('../../../public/assets/login_bg.webp');
+  background-color: #F4E9DC;
+}
+
+.order-success-page .order-success-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  margin-top: 90px;
+}
+
+.order-success-page .success-checkmark {
+  animation: checkmark 0.8s ease-out;
+}
+
+.order-success-page .checkmark-icon {
+  color: #4CAF50;
+  font-size: 4rem;
+}
+
+.order-success-page .success-heading {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.order-success-page .success-message {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.order-success-page .order-details_1 {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 30px;
+  padding: 50px 20px 50px 20px;
+  border-radius: 40px;
+  background-color: #eddfd094;
+  backdrop-filter: blur(2px);
+}
+
+.order-success-page .order-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 40px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 3D effect */
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.order-success-page .product-details {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.order-success-page .product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  width: 135px;
+  height: 165px;
+  border-radius: 8px;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 3D effect for image */
+}
+
+.order-success-page .product-info {
+  text-align: left;
+  width: 65%;
+}
+
+.order-success-page .product-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.order-success-page .product-quantity,
+.product-weight,
+.product-price,
+.product-subtotal {
+  margin: 5px 0;
+  color: #666;
+}
+
+.order-success-page .order-info {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.order-success-page .order-id {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.order-success-page .payment-id,
+.order-date,
+.shipping-address {
+  margin: 5px 0;
+  color: #666;
+}
+
+.order-success-page .order-success-actions {
+  margin-top: 30px;
+}
+
+.order-success-page .view-orders-btn,
+.continue-shopping-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: white;
+  color: #723207;
+  border: 2px solid #723207;
+  border-radius: 20px;
+  margin-left: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.order-success-page .view-orders-btn:hover,
+.continue-shopping-btn:hover {
+  background-color: #723207;
+  color: white;
+  transform: scale(1.05); /* Button scaling on hover */
+}

@@ -1,0 +1,64 @@
+.logo{
+  width: 40%;
+  margin-bottom: 15px;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  height: auto;
+}
+.footer{
+  background-color: #723207;
+  font-display: swap
+}
+.social_icon{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding-top: 10px;
+}
+.desc{
+  color: #fff;
+}
+.social_icon svg{
+  font-size: 25px;
+  color: #fff;
+}
+.link_list{
+  list-style: none;
+  padding:0;
+}
+.link_list li a{
+  text-decoration: none;
+  color: #fff;
+}
+.link_list li{
+  margin-bottom: 15px;
+  color: rgb(255, 255, 255);
+}
+.link_list li:hover{
+  cursor: pointer;
+  color: rgb(255, 145, 0);
+}
+.link_title{
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #fff;
+}
+.contact_info{
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.contact_info svg{
+  font-size: 30px;
+  color: #fff;
+  width: 15%;
+}
+.contact_info p{
+  font-size: 18x;
+  margin: 0;
+  color: #fff;
+  width: 85%;
+}

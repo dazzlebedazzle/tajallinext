@@ -1,0 +1,600 @@
+/* Products.css */
+
+/* Container for the products page */
+.products-container {
+  margin-left: 300px; /* Adjust this according to your sidebar width */
+  padding: 20px;
+  background-color: #DCC0A9;
+}
+
+.products-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Grid container for products */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  justify-content: center; /* Center the product cards */
+}
+
+/* Individual product card */
+.product-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 16px;
+  text-align: center;
+  width: 100%;
+  max-width: 300px; /* Fixed max-width for the product card */
+  margin: auto; /* Center the card horizontally */
+}
+
+/* Image within the product card */
+.product-card img {
+  width: 200px; /* Fixed width */
+  height: 200px; /* Fixed height */
+  object-fit: cover; /* Ensure image doesn't stretch */
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Button styles */
+.add-product-btn,
+.edit-btn,
+.delete-btn {
+  background-color: #723207;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.edit-btn,
+.delete-btn {
+  width: 45%;
+  display: inline-block;
+}
+
+/* Popup container */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Popup box */
+.popup-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 100%;
+  position: relative;
+}
+
+/* Close button for popup */
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Form input styles */
+form input,
+form textarea {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Submit button */
+.submit-btn {
+  background-color: #723207;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Selected images styles */
+.selected-images {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.image-item {
+  position: relative;
+}
+
+.image-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+/* Weights input container */
+.weights-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.weights-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.weight-tag {
+  background: #ddd;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.remove-weight-btn {
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+/* Logout popup styles */
+.logout-popup-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logout-yes,
+.logout-no {
+  background-color: #723207;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    justify-content: center;
+  }
+
+  .products-container {
+    margin-left: 0;
+    padding: 10px;
+  }
+  .products-container h2{
+    margin-top: 30px;
+    text-align: center;
+  }
+  .products-container button{
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    justify-content: center;
+  }
+
+  .product-card {
+    padding: 10px;
+  }
+
+  .add-product-btn,
+  .edit-btn,
+  .delete-btn {
+    padding: 8px 16px;
+  }
+
+  form input,
+  form textarea {
+    width: calc(100% - 16px);
+    padding: 8px;
+  }
+
+  .submit-btn {
+    padding: 8px 16px;
+  }
+
+  .popup-box {
+    padding: 16px;
+  }
+}
+/* General container styling */
+.products-container {
+  margin-left: 300px; /* Adjust according to your sidebar width */
+  padding: 20px;
+  background-color: #DCC0A9;
+}
+
+.add-product-btn {
+  background-color: #723207;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* Popup styling */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-box {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80%; /* Limit height to 80% of viewport */
+  overflow-y: auto; /* Enable vertical scrolling */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.popup-box h3 {
+  margin-bottom: 20px;
+}
+
+.popup-box form {
+  display: grid;
+  gap: 10px;
+}
+
+.popup-box form input,
+.popup-box form textarea {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Image selection styling */
+.selected-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-images .image-item {
+  position: relative;
+}
+
+.selected-images .image-item img {
+  max-width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #fff;
+  color: #d00;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Product list grid styling */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.product-item {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px; /* Fixed height for uniformity */
+  margin-bottom: 10px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-details {
+  width: 100%;
+}
+
+.product-details h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #723207;
+}
+
+.product-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Buttons styling */
+.product-buttons {
+  margin-top: 10px;
+}
+
+.product-buttons button {
+  margin-left: 10px;
+  color: #ccc;
+  background-color: brown;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  transition: 0.3s all ease-in-out;
+}
+
+.product-buttons button:hover {
+  background-color: #fff;
+  color: #723207;
+}
+
+/* Add these styles to your Products.css file */
+
+.weights-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.weights-input-container input {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.weights-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.weight-tag {
+  background-color: #723207;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.weight-tag .remove-weight-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  margin-left: 5px;
+  cursor: pointer;
+}/* Products.css */
+
+/* Popup container */
+.popup-container,
+.details-popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: small;
+
+}
+
+.popup-box,
+.details-popup-box {
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  position: relative;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  overflow-y: auto;
+    height: 400px;
+}
+.product-details-flex{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+
+}
+.close-popup,
+.close-details-btn {
+   margin-left: 10px;
+  color: #ccc;
+  background-color: brown;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  transition: 0.3s all ease-in-out;
+}
+
+/* Product images in details popup */
+.product-images img {
+  max-width: 100px;
+  margin: 5px;
+}
+
+/* Buttons styling */
+.product-buttons button {
+  margin-right: 10px;
+}
+
+
+
+/* Product details */
+.product-details p {
+  margin: 5px 0;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media(max-width:1080px){
+  .products-container {
+    margin-left: 0px;
+    padding: 50px;
+    background-color: #DCC0A9;
+}
+}
+
+@media (max-width: 768px) {
+  .products-container {
+    margin-left: 0; /* Adjust according to your sidebar width */
+    padding: 10px;
+  }
+  
+  .products-container h2{
+    text-align: center;
+  }
+  .products-container h2,.add-product-btn{
+    margin-top: 10px;
+  }
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    
+  }
+  .product-image {
+    width: 80%;
+    height: 150px; /* Fixed height for uniformity */
+    margin-bottom: 10px;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  .add-product-btn {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .product-list {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .product-item {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-box {
+    width: 95%;
+  }
+
+  .product-item {
+    padding: 10px;
+  }
+}
+
+
+/* @media (max-width: 768px) {
+  .products-container {
+    margin-left: 0; 
+    
+  }
+} */

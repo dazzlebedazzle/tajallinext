@@ -1,0 +1,135 @@
+.register_main{
+   
+  background: url('../../../public/assets/login_bg.webp');
+  background-color: #F4E9DC;
+  height: fit-content;
+  
+ 
+}
+.registration-container {
+  width: 30%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #000000;
+
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+
+
+}
+
+.registration-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: rgb(0, 0, 0);
+}
+.registration-container .register_name{
+  display: flex;
+  gap: 20px;
+}
+
+.registration-container .form-group {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.registration-container  .form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.registration-container  .form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  background-color: #00000000;  
+  border: 1px solid #000000;
+  color: rgb(0, 0, 0);
+}
+.registration-container  .register_name  input{
+  width: 49%;
+  
+
+}
+.registration-container  .password-container {
+  position: relative;
+}
+
+.registration-container  .password-container input {
+  width: 100%;
+  padding-right: 30px;
+}
+
+.registration-container  .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.registration-container  button {
+  width: 100%;
+  padding: 10px;
+  background-color: #00000000;
+  color: #000000;
+  border: 1px solid rgb(0, 0, 0);
+  margin-top: 10px;
+ 
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registration-container  button:hover {
+  background-color: rgb(87, 28, 28);
+  color: rgb(255, 255, 255);
+}
+.registration-container  .links {
+  margin-top: 15px;
+  text-align: center;
+}
+.registration-container  .links span{
+  color: rgb(0, 0, 0);
+}
+.registration-container  .links a {
+  margin: 0 10px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.registration-container  .links a:hover {
+  text-decoration: underline;
+}
+
+.registration-container  ::placeholder{
+  color: rgb(0, 0, 0);
+}
+.registration-container select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+@media (max-width:1080px){
+  .registration-container {
+    width: 50%;
+  }
+}
+@media (max-width:768px){
+  .registration-container {
+    width: 60%;
+  }
+}
+@media (max-width: 600px) {
+  .registration-container select {
+    font-size: 14px;
+  }
+}
+@media (max-width:420px){
+  .registration-container {
+    width: 80%;
+  }
+}
