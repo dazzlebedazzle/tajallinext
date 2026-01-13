@@ -1,59 +1,125 @@
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Header */
+.slider-header {
+  text-align: center;
+  margin-top: 2rem;
 }
 
+.slider-header h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2e2e2e;
+}
+
+.category-divider {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.category-divider img {
+  max-width: 80%;
+  height: auto;
+}
+
+/* Slider container */
 .slider-container1 {
-  width: 90%;
-  margin: 60px auto 0;
-  transition: all 0.3s ease-in-out;
-  position: relative;
+  padding: 0 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .slider-container1 .slick-list {
-  overflow: visible !important;
-}
-
-.custom-slick-track {
-  height: fit-content;
-  padding: 0;
+  margin: 0 -15px;
+  padding: 20px 0;
+  overflow: visible;
 }
 
 .slider-container1 .slick-slide {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .slider-container1 .slick-slide > div {
-  background-color: #b37b50;
-  color: white;
-  border-radius: 12px;
-  width: 140px; /* Increased size */
-  height: 140px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Card wrapper */
+.image-card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+  animation: fadeInUp 0.6s forwards;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Image Card */
+.image-card {
   display: flex;
   flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 140px;
+  height: 140px;
+  min-width: 140px;
+  min-height: 140px;
+  max-width: 140px;
+  max-height: 140px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 0.5px solid #eaeaea;
+  margin: 0 auto;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.image-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+/* Image Container */
+.image-container {
+  width: 100%;
+  height: 100%;
+  background-color: #b37b50;
+  display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  position: relative;
 }
 
-.slider-container1 .slick-slide > div:hover {
-  transform: scale(1.05);
-}
-
-.slider-container1 .slick-slide img {
-  width: 250px;
-  height: auto;
+/* Image Styling */
+.card-image {
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain;
-  /* margin-bottom: 10px; */
+  background-color: transparent;
+  display: block;
 }
 
 /* Arrows */
@@ -61,87 +127,113 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 28px;
   z-index: 10;
-  cursor: pointer;
-  color: #000;
-  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 1.8rem;
+  color: #333;
+  background: rgba(255, 255, 255, 0.95);
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  padding: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.slick-arrow:hover {
+  background: #d4af37;
+  color: white;
 }
 
 .slick-arrow.prev {
-  left: -25px;
+  left: -10px;
 }
 
 .slick-arrow.next {
-  right: -25px;
-}
-
-/* Dots */
-.slider-container1 .slick-dots {
-  bottom: -30px;
-}
-
-.slider-container1 .slick-dots li button:before {
-  color: #ccc;
-  font-size: 8px;
-}
-
-.slider-container1 .slick-dots li.slick-active button:before {
-  color: #723207;
-  font-size: 14px;
+  right: -10px;
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .slider-container1 .slick-list {
+    margin: 0 -12px;
+    overflow: visible;
+  }
+
+  .slider-container1 .slick-slide {
+    padding: 0 12px;
+  }
+
+  .image-card {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    min-height: 120px;
+    max-width: 120px;
+    max-height: 120px;
+  }
+}
+
 @media (max-width: 768px) {
-  .slider-container1 .slick-slide > div {
-    width: 120px;
-    height: 120px;
+  .slider-container1 {
+    padding: 0 0.5rem;
   }
 
-  .slider-container1 .slick-slide img {
-    width: 180px;
-    height: 180px;
+  .slider-container1 .slick-list {
+    margin: 0 -8px;
+    padding: 15px 0;
+    overflow: visible;
   }
 
-  .slick-arrow {
-    font-size: 24px;
-    padding: 6px;
-  }
-}
-@media (max-width: 600) {
-  .slider-container1 .slick-slide > div {
-    width: 120px;
-    height: 120px;
+  .slider-container1 .slick-slide {
+    padding: 0 8px;
   }
 
-  .slider-container1 .slick-slide img {
-    width: 400px;
-    height: 400px;
+  .image-card {
+    width: 110px;
+    height: 110px;
+    min-width: 110px;
+    min-height: 110px;
+    max-width: 110px;
+    max-height: 110px;
   }
 
   .slick-arrow {
-    font-size: 24px;
-    padding: 6px;
+    display: none;
   }
 }
 
-@media (max-width: 420px) {
-  .slider-container1 .slick-slide > div {
-    width: 120px;
-    height: 120px;
+@media (max-width: 480px) {
+  .slider-container1 .slick-list {
+    margin: 0 -6px;
+    padding: 10px 0;
+    overflow: visible;
   }
 
-  .slider-container1 .slick-slide img {
-    width: 160px;
-    height: 160px;
+  .slider-container1 .slick-slide {
+    padding: 0 6px;
   }
 
-  .slick-arrow {
-    font-size: 20px;
-    padding: 4px;
+  .image-card {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
   }
 }
 
+@media (max-width: 360px) {
+  .slider-container1 .slick-list {
+    overflow: visible;
+  }
+
+  .image-card {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+    min-height: 90px;
+    max-width: 90px;
+    max-height: 90px;
+  }
+}

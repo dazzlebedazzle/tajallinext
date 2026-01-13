@@ -28,17 +28,22 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Buy Premium Dry Fruits, Nuts, Seeds and Berries Online",
-  description: "Shop TAJALLI’s finest selection of dry fruits, nuts, seeds, and berries. 100% natural, rich in nutrients, and perfect for a healthy lifestyle. Order now!",
+  description: "Shop TAJALLI's finest selection of dry fruits, nuts, seeds, and berries. 100% natural, rich in nutrients, and perfect for a healthy lifestyle. Order now!",
   icons: {
     icon: "/logo.png",  // Ensure you have a favicon.ico file in public folder
     apple: "/logo.png", // Optional for Apple devices
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
   },
   alternates: {
     canonical: "https://www.tajalli.co.in",
 },
   openGraph: {
     title: "Buy Premium Dry Fruits, Nuts, Seeds and Berries Online",
-    description: `Shop TAJALLI’s finest selection of dry fruits, nuts, seeds, and berries. 100% natural, rich in nutrients, and perfect for a healthy lifestyle. Order now!`,
+    description: `Shop TAJALLI's finest selection of dry fruits, nuts, seeds, and berries. 100% natural, rich in nutrients, and perfect for a healthy lifestyle. Order now!`,
     images: "https://res.cloudinary.com/dqa6jk5fx/image/upload/c_scale,w_2200/f_auto/q_60/v1722759470/nltkiyr5lnr3uoldrpef.webp",
 }
 };

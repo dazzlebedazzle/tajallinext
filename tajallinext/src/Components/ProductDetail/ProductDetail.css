@@ -424,24 +424,131 @@
 }
 
 @media (max-width: 480px) {
+    .product-detail {
+        padding: 10px;
+        gap: 5px;
+    }
+
+    .thumbnails {
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+
     .thumbnails img {
-        width: 18%; /* Adjust size for smaller screens */
+        width: 18%;
+        min-width: 50px;
+    }
+
+    .focused-image {
+        width: 100%;
     }
 
     .product-info {
-        padding: 0px;
+        padding: 10px;
         width: 100%;
     }
-    .buttons{
+
+    .product-info h1 {
+        font-size: 20px;
+    }
+
+    .price {
+        font-size: 24px;
+    }
+
+    .price del {
+        font-size: 20px;
+    }
+
+    .weight-selection,
+    .quantity-selection {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
     }
-    .add-to-cart, .buy-now{
+
+    .weight-selection p,
+    .quantity-selection p {
+        font-size: 14px;
+    }
+
+    .weight-selection select,
+    .quantity-selection select {
         width: 100%;
+        padding: 8px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .add-to-cart,
+    .buy-now {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .description h2 {
+        font-size: 18px;
+    }
+
+    .description ul {
+        font-size: 14px;
+        gap: 15px;
+    }
+
+    .more-details .desc {
+        width: 95%;
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .more-details h3,
+    .more-details h4 {
+        font-size: 16px;
+    }
+
+    .more-details p {
+        font-size: 14px;
+    }
+
+    .related-products h2 {
+        margin-left: 5%;
+        font-size: 20px;
+    }
+
+    .product-list {
+        padding: 10px;
+        margin-left: 0;
+        width: 100%;
+        gap: 8px;
     }
 }
+
 @media (max-width: 320px) {
     .product-info {
-        padding: 15px;
-        width: 90%;
+        padding: 8px;
+        width: 100%;
+    }
+
+    .product-info h1 {
+        font-size: 18px;
+    }
+
+    .price {
+        font-size: 20px;
+    }
+
+    .add-to-cart,
+    .buy-now {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .thumbnails img {
+        width: 20%;
     }
 }

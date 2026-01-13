@@ -212,107 +212,172 @@
   
 @media (max-width: 768px) {
     .card_shop {
-        width: 46%; /* Adjusted width for tablets and mobile devices */
+        width: 46%;
+        padding: 8px;
+        margin-bottom: 15px;
     }
+    
     .card_shop .weight{
         order: -1;
     }
 
     .card_shop h2 {
-        font-size: 14px; /* Adjusted font size */
+        font-size: 14px;
+        line-height: 1.3;
+        margin: 4px 0;
     }
 
     .card_shop h3 {
-        font-size: 12px; /* Adjusted font size */
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .card_shop p {
+        font-size: 13px;
     }
 
     .vegicon img{
-      bottom: 65%;
+        bottom: 65%;
+        width: 10%;
+        right: 15px;
     }
 
     .wishlist-icon {
-        font-size: 18px; /* Adjusted icon size */
+        font-size: 18px;
     }
-    .popup-content {
-        width: 90%; /* Full width on smaller screens */
-        max-width: none; /* Remove fixed width constraint */
-      }
     
-      .popup-content p {
-        font-size: 1em; /* Smaller text size on mobile devices */
-      }
-      .card_shop .weightperg {
-        font-size: 10px; /* Adjusted font size */
+    .popup-content {
+        width: 90%;
+        max-width: none;
+        padding: 20px;
+    }
+    
+    .popup-content p {
+        font-size: 1em;
+    }
+    
+    .card_shop .weightperg {
+        font-size: 11px;
         flex-wrap: wrap;
         justify-content: flex-start;
         align-items: center;
+        gap: 5px;
     }
+    
     .card_shop .weight{
-        font-size: 13px;
-        padding: 5px;
-        margin: 4px 10px 4px 0px;
+        font-size: 12px;
+        padding: 4px;
+        margin: 4px 0;
         width: 100%;
+    }
+
+    .card_shop .add {
+        font-size: 13px;
+        padding: 6px 8px;
+        margin-top: 8px;
+    }
+
+    .pricefont {
+        font-size: 16px;
     }
 }
 
 @media (max-width: 480px) {
     .card_shop {
-        
-        padding: 8px; /* Adjusted padding */
+        width: 48%;
+        padding: 6px;
+        margin-bottom: 12px;
     }
 
     .card_shop h2 {
-        font-size: 12px; /* Adjusted font size */
+        font-size: 12px;
+        line-height: 1.2;
+        margin: 3px 0;
+        -webkit-line-clamp: 2;
     }
 
     .card_shop h3 {
-        font-size: 10px; /* Adjusted font size */
+        font-size: 11px;
+        margin-top: 4px;
     }
 
-  
+    .card_shop p {
+        font-size: 11px;
+    }
 
     .card_shop .add {
-        padding: 3px 5px; /* Adjusted button padding */
-        font-size: 10px; /* Adjusted font size */
+        padding: 5px 8px;
+        font-size: 11px;
+        margin-top: 6px;
     }
 
     .wishlist-icon {
-        font-size: 16px; /* Adjusted icon size */
+        font-size: 16px;
     }
 
     .card_shop .weightperg {
-        font-size: 10px; /* Adjusted font size */
+        font-size: 10px;
         flex-wrap: wrap;
         justify-content: flex-start;
+        gap: 3px;
     }
-    .popup-content {
-        width: 75%; /* Full width on smaller screens */
-        max-width: none; /* Remove fixed width constraint */
-      }
-    
-      .popup-content p {
-        font-size: 1em; /* Smaller text size on mobile devices */
-      }
-      .weightperg p{
-        color: green;
-        font-size: 16px;
-     }
-     .weightperg  span{
+
+    .card_shop .weight {
         font-size: 11px;
-        margin-top: 8px;
-     }
-     .card_shop .weight {
-        color: rgb(0, 0, 0);
-        border: 0;
-        outline: none;
-        border-radius: 10px;
-        
+        padding: 3px;
+        margin: 3px 0;
     }
-    .vegicon img{
-      bottom: 60%;
+
+    .popup-content {
+        width: 85%;
+        max-width: none;
+        padding: 15px;
     }
-      
+    
+    .popup-content p {
+        font-size: 0.9em;
+    }
+    
+    .weightperg p {
+        color: green;
+        font-size: 14px;
+    }
+
+    .pricefont {
+        font-size: 14px;
+    }
+
+    .vegicon img {
+        width: 9%;
+        bottom: 68%;
+        right: 12px;
+    }
 }
+
+@media (max-width: 320px) {
+    .card_shop {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .card_shop h2 {
+        font-size: 11px;
+    }
+
+    .card_shop h3 {
+        font-size: 10px;
+    }
+
+    .card_shop .add {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+
+    .pricefont {
+        font-size: 13px;
+    }
+}
+
 @media (max-width: 380px) {
     .card_shop {
       

@@ -5,7 +5,8 @@ import CouponRedirect from './CouponRedirect';
 
 export async function generateMetadata({ params, searchParams }) {
     // Extract the actual slug by removing query parameters
-    const actualSlug = params?.slug?.split('?')[0];
+    const resolvedParams = await params;
+    const actualSlug = resolvedParams?.slug?.split('?')[0];
     
     if (!actualSlug) {
         return {
@@ -39,7 +40,7 @@ export async function generateMetadata({ params, searchParams }) {
             title: metadescTitle.metaTitle,
             description: metadescTitle.description,
             openGraph: {
-                title: metadescTitle.title,
+                title: metadescTitle.metaTitle,
                 description: metadescTitle.description,
                 images: product.images?.length ? [product.images[0]] : [],
             },
@@ -58,15 +59,20 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function ProductPage({ params, searchParams }) {
     // Extract the actual slug by removing query parameters
-    const actualSlug = params?.slug?.split('?')[0];
+    const resolvedParams = await params;
+    const actualSlug = resolvedParams?.slug?.split('?')[0];
     const coupon = searchParams?.coupon;
     const autoApply = searchParams?.autoApply === 'true';
 
     if (!actualSlug) {
-        return {
-            title: "Product Details | Tajalli",
-            description: "Explore this product on Tajalli",
-        };
+        return (
+            <div className="container py-5">
+                <div className="text-center">
+                    <h1>Product Not Found</h1>
+                    <p>The requested product could not be found.</p>
+                </div>
+            </div>
+        );
     }
 
     function getProductDescriptionTitle(prtitle) {

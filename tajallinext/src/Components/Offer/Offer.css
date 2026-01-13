@@ -1,16 +1,4 @@
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
-}
+/* Offer component styles only */
 
 .Wpp {
   width: 80%;
@@ -21,6 +9,7 @@ body {
 
 .contain {
   margin-top: 0px;
+  background: transparent;
 }
 
 /* Hide unwanted text in default slick arrows */
@@ -47,12 +36,14 @@ body {
   transition: transform 300ms, opacity 300ms;
   opacity: 0.7;
   padding: 0 10px;
-  overflow: hidden;
+  overflow: visible;
   transform: scale(0.8);
+  background: transparent;
 }
 .Wpp .activeSlide {
   transform: scale(1);
   opacity: 1;
+  background: transparent;
 }
 
 /* Center slide content vertically */

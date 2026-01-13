@@ -122,11 +122,11 @@ export default function Home() {
     router.push(`/Shop/${category}`);
   };
 
-  const limitedall = bestseller.slice(0, 5);
-  const limitedRaisin = raisin.slice(0, 5);
-  const limitedAlmonds = almonds.slice(0, 5);
-  const limitedBerries = berries.slice(0, 5);
-  const limitedItems = items.slice(0, 5);
+  const limitedall = bestseller.slice(0, 4);
+  const limitedRaisin = raisin.slice(0, 4);
+  const limitedAlmonds = almonds.slice(0, 4);
+  const limitedBerries = berries.slice(0, 4);
+  const limitedItems = items.slice(0, 4);
 
   return (
     <div className="home">

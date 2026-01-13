@@ -218,59 +218,148 @@
 @media (max-width: 768px){
     .home .first{
         height: fit-content;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .top {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+        gap: 10px;
     }
 
     .top button{
-        
-       
-       font-size: 15px;
+        font-size: 14px;
         margin-top: 0px;
-    
+        margin-right: 0;
+        padding: 8px 20px;
+        width: auto;
+        float: none;
     }
         
-    
     .top .tittle{
-        
-        font-size: 20px;
+        font-size: 18px;
         margin-top: 8px;
-       
+        margin-left: 0;
+        float: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    .top .tittle hr {
+        width: 80%;
+        margin: 10px auto;
+        float: none;
     }
   
-   
     .btn2 button{
         font-size: 11px;
         width: 25%;
         padding: 3px;
-       
     }
+    
     .custom-slick-track {
         height: fit-content;
     }
-    .home .second {
+    
+    .home .second,
+    .home .second2,
+    .home .second3,
+    .home .second4,
+    .home .second5 {
         height: fit-content;
+        padding-top: 15px;
+        margin-top: 15px;
     }
-    .home .second2 {
-        height: fit-content;
-    }
+    
     .fourth {
         margin-top: 0px;
-
-   
+        padding-top: 30px;
+        padding-bottom: 30px;
     }
 
     .delicacies{
-
         width: 100%;
-        gap: 0px;
-        justify-content: space-evenly;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 30px;
+        padding: 0 5px;
     }
 
-    
-    
+    .branch_sec {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding: 0 15px;
+    }
+
+    .branch_sec .heading {
+        font-size: 24px;
+    }
+
+    .branch_sec hr {
+        width: 30%;
+    }
+
+    .offer_home {
+        padding: 0 10px;
+    }
 }
 
-@media (max-width: 768px){
-  .top .tittle{
-    font-size: 18px;
-  }
+@media (max-width: 480px){
+    .top .tittle{
+        font-size: 16px;
+        margin-left: 0;
+    }
+
+    .top button{
+        font-size: 12px;
+        padding: 6px 15px;
+    }
+
+    .top .tittle hr {
+        width: 70%;
+    }
+
+    .delicacies{
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .branch_sec .heading {
+        font-size: 20px;
+    }
+
+    .branch_sec hr {
+        width: 40%;
+    }
+
+    .home .second,
+    .home .second2,
+    .home .second3,
+    .home .second4,
+    .home .second5 {
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    .fourth {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+@media (max-width: 320px){
+    .top .tittle{
+        font-size: 14px;
+    }
+
+    .top button{
+        font-size: 11px;
+        padding: 5px 12px;
+    }
+
+    .branch_sec .heading {
+        font-size: 18px;
+    }
 }

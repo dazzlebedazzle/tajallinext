@@ -57,8 +57,98 @@
   width: 15%;
 }
 .contact_info p{
-  font-size: 18x;
+  font-size: 18px;
   margin: 0;
   color: #fff;
   width: 85%;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .logo {
+    width: 50%;
+    margin-bottom: 10px;
+  }
+
+  .link_title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .link_list li {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  .contact_info {
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .contact_info svg {
+    font-size: 24px;
+    width: 12%;
+  }
+
+  .contact_info p {
+    font-size: 14px;
+    width: 88%;
+  }
+
+  .social_icon {
+    gap: 15px;
+    padding-top: 8px;
+  }
+
+  .social_icon svg {
+    font-size: 20px;
+  }
+
+  .desc {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    width: 60%;
+  }
+
+  .link_title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .link_list li {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .contact_info {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .contact_info svg {
+    font-size: 20px;
+    width: 10%;
+  }
+
+  .contact_info p {
+    font-size: 12px;
+    width: 90%;
+  }
+
+  .social_icon {
+    gap: 12px;
+    padding-top: 6px;
+  }
+
+  .social_icon svg {
+    font-size: 18px;
+  }
+
+  .desc {
+    font-size: 12px;
+  }
 }
