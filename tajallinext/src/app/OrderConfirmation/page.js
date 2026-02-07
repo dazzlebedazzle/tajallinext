@@ -326,6 +326,7 @@ const OrderConfirmation = () => {
             console.log(amount);
 
             const options = {
+                
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
                 amount: amount,
                 currency: currency,
