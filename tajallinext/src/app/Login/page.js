@@ -14,6 +14,7 @@ import './Login.css'; // Regular CSS import
 import Image from 'next/image';
 import pointimg from '../../../public/assets/tajallicoin.gif'
 
+
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
