@@ -29,6 +29,7 @@ const defaultOptions = {
   },
 };
 
+
 const Cart = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, updateQuantity, addToCart } = useCart();
   const { verifOtp } = useContext(AuthContext);

@@ -8,6 +8,7 @@ import logo from '../../../public/assets/logo.webp';
 import { useOrder } from '@/Context/OrderContext';
 import Image from 'next/image';
 
+
 const OrderConfirmation = () => {
     const orderDetail = useOrder();
     const { updateOrderState } = useOrder();
