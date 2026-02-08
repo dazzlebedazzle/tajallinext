@@ -12,9 +12,8 @@ import ConfirmationModal from '@/Components/ConfirmationModal/ConfirmationModal'
 import Head from 'next/head';
 import './Login.css'; // Regular CSS import
 import Image from 'next/image';
-import pointimg from '../../../public/assets/tajallicoin.gif'
-
-
+import pointimg from '../../../public/assets/tajallicoin.gif';
+import Loader from '@/Components/Loader/Loader';
 
 const Login = () => {
   const router = useRouter();
@@ -26,11 +25,12 @@ const Login = () => {
   const { clearCart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageOptionsVisible, setIsImageOptionsVisible] = useState(false);
-  const [mobile, setMobile] = useState('');
+  const [otpEmail, setOtpEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [isOtpLogin, setIsOtpLogin] = useState(true);
-  const [mobileError, setMobileError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [isLoadingOtp, setIsLoadingOtp] = useState(false);
   const [userDetails, setUserDetails] = useState({
     firstname: '',
     lastname: '',
@@ -137,22 +137,26 @@ const Login = () => {
     }
   };
 
-  const validateMobile = (number) => {
-    const mobileRegex = /^[0-9]{10}$/;
-    return mobileRegex.test(number);
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const handleSendOtp = async () => {
-    if (!validateMobile(mobile)) {
-      setMobileError('Please enter a valid 10-digit mobile number.');
+    if (!validateEmail(otpEmail)) {
+      setEmailError('Please enter a valid email address.');
       return;
     }
-    setMobileError('');
+    setEmailError('');
+    setIsLoadingOtp(true);
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/otp/sendOTP`, { mobile });
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/otp/sendOTP`, { email: otpEmail });
       setOtpSent(true);
+      setError('');
     } catch (err) {
-      setError('User Not Registerd');
+      setError(err?.response?.data?.error || 'User Not Registered');
+    } finally {
+      setIsLoadingOtp(false);
     }
   };
 
@@ -164,14 +168,14 @@ const Login = () => {
     }
 
     try {
-      const response = await verifOtp({ mobile, otp });
+      const response = await verifOtp({ email: otpEmail, otp });
       if (response && response.success) {
         router.push('/');
       } else {
-        setError(response?.error || 'Incorrect OTP . Try Again');
+        setError(response?.error || 'Incorrect OTP. Try Again');
       }
     } catch (err) {
-      setError(err?.response?.data?.message || err.message || 'Something went wrong');
+      setError(err?.response?.data?.error || err?.response?.data?.message || err.message || 'Something went wrong');
 
     }
   };
@@ -276,35 +280,46 @@ const Login = () => {
         <h2>LOGIN</h2>
         {isOtpLogin ? (
           <div>
-            <p>Login with Mobile OTP</p>
+            <p>Login with Email OTP</p>
             {error && <p className="error text-danger">{typeof error === 'string' ? error : error.message || 'Something went wrong'}</p>}
 
             <form>
-              <div className="form-group">
-                <input
-                  type='tel'
-                  placeholder='Mobile Number'
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  required
-                />
-                {mobileError && <p className="error">{mobileError}</p>}
-              </div>
-              {otpSent && (
-                <div className="form-group">
-                  <input
-                    type='text'
-                    placeholder='Enter OTP'
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    required
-                  />
+              {isLoadingOtp ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                  <Loader />
                 </div>
-              )}
-              {!otpSent ? (
-                <button type='button' onClick={handleSendOtp}>Send OTP</button>
               ) : (
-                <button type='submit' onClick={handleOtpVerification}>Verify OTP</button>
+                <>
+                  <div className="form-group">
+                    <input
+                      type='email'
+                      placeholder='Email Address'
+                      value={otpEmail}
+                      onChange={(e) => setOtpEmail(e.target.value)}
+                      required
+                      disabled={isLoadingOtp}
+                    />
+                    {emailError && <p className="error">{emailError}</p>}
+                  </div>
+                  {otpSent && (
+                    <div className="form-group">
+                      <input
+                        type='text'
+                        placeholder='Enter OTP'
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        required
+                      />
+                    </div>
+                  )}
+                  {!otpSent ? (
+                    <button type='button' onClick={handleSendOtp} disabled={isLoadingOtp}>
+                      {isLoadingOtp ? 'Sending...' : 'Send OTP'}
+                    </button>
+                  ) : (
+                    <button type='submit' onClick={handleOtpVerification}>Verify OTP</button>
+                  )}
+                </>
               )}
             </form>
           </div>
@@ -346,7 +361,7 @@ const Login = () => {
 
         <div className="links">
           <button onClick={() => setIsOtpLogin(!isOtpLogin)}>
-            {isOtpLogin ? 'Login with Email & Password' : 'Login with Mobile OTP'}
+            {isOtpLogin ? 'Login with Email & Password' : 'Login with Email OTP'}
           </button>
         </div>
         <div className="links">

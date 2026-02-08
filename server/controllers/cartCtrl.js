@@ -212,56 +212,123 @@ const mergeCartAfterLogin = asyncHandler(async (req, res) => {
 
   if (!req.user) return res.status(401).json({ message: "User not logged in" });
 
-  const user = await User.findById(req.user.id);
-  let guestCart = req.body.guestCart; // Extract guestCart from request body
-
-  if (!Array.isArray(guestCart) || guestCart.length === 0) {
-    return res.status(400).json({ message: "Guest cart is empty or invalid" });
-  }
-
-  if (!user.cart) user.cart = []; // Ensure user's cart is initialized
-
-  let cartUpdated = false;
-
-  console.log("Guest Cart:", guestCart);
-  console.log("User's Existing Cart:", user.cart);
-
-  // Merge guest cart into user cart
-  guestCart.forEach((guestItem) => {
-    const guestWeight = guestItem.weight.toString();
-  
-    const existingItem = user.cart.find(
-      (item) =>
-        item.productId.toString() === guestItem.productId &&
-        item.weight.toString() === guestWeight
-    );
-  
-    if (existingItem) {
-      existingItem.quantity += guestItem.quantity;
-    } else {
-      const { cartId, _id, ...newItem } = guestItem;
-  
-      if (!newItem.slug) {
-        console.warn("Skipping item with missing slug:", newItem);
-        return;
-      }
-  
-      user.cart.push({
-        ...newItem,
-        weight: guestWeight, // ensure consistent type
-      });
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  
-    cartUpdated = true;
-  });
-  
 
-  if (cartUpdated) {
-    await user.save(); // Save updated cart in database
-    return res.json({ message: "Cart merged successfully", cart: user.cart });
+    let guestCart = req.body.guestCart; // Extract guestCart from request body
+
+    // If guestCart is empty or not provided, just return user's current cart
+    if (!Array.isArray(guestCart) || guestCart.length === 0) {
+      return res.json({ message: "No guest cart to merge", cart: user.cart || [] });
+    }
+
+    if (!user.cart) user.cart = []; // Ensure user's cart is initialized
+
+    let cartUpdated = false;
+    const mongoose = require('mongoose');
+
+    console.log("Guest Cart:", JSON.stringify(guestCart, null, 2));
+    console.log("User's Existing Cart:", JSON.stringify(user.cart, null, 2));
+
+    // Merge guest cart into user cart
+    guestCart.forEach((guestItem) => {
+      try {
+        // Validate required fields according to userModel schema
+        if (!guestItem.productId || guestItem.weight === undefined || guestItem.weight === null) {
+          console.warn("Skipping item with missing required fields (productId or weight):", guestItem);
+          return;
+        }
+
+        // Ensure productId is a valid ObjectId
+        let productId;
+        try {
+          productId = mongoose.Types.ObjectId.isValid(guestItem.productId) 
+            ? new mongoose.Types.ObjectId(guestItem.productId)
+            : guestItem.productId;
+        } catch (e) {
+          console.warn("Invalid productId format:", guestItem.productId);
+          return;
+        }
+
+        const guestWeight = Number(guestItem.weight);
+        if (isNaN(guestWeight)) {
+          console.warn("Invalid weight value:", guestItem.weight);
+          return;
+        }
+    
+        const existingItem = user.cart.find(
+          (item) =>
+            item.productId && 
+            item.productId.toString() === productId.toString() &&
+            item.weight !== undefined && 
+            item.weight !== null &&
+            Number(item.weight) === guestWeight
+        );
+    
+        if (existingItem) {
+          existingItem.quantity = (existingItem.quantity || 0) + (guestItem.quantity || 1);
+          cartUpdated = true;
+        } else {
+          // Create new item with all required fields according to schema
+          const { cartId, _id, ...newItem } = guestItem;
+          
+          // Validate and set all required fields
+          if (!newItem.title || !newItem.category) {
+            console.warn("Skipping item with missing required fields (title or category):", newItem);
+            return;
+          }
+
+          // Generate slug if missing
+          const slug = newItem.slug || `product-${productId.toString()}-${guestWeight}`;
+
+          const itemToAdd = {
+            productId: productId,
+            title: String(newItem.title),
+            image: newItem.image || '',
+            category: String(newItem.category),
+            weight: guestWeight,
+            totalPrice: Number(newItem.totalPrice) || 0,
+            quantity: Number(newItem.quantity) || 1,
+            slug: slug,
+            cartId: newItem.cartId || undefined,
+          };
+    
+          user.cart.push(itemToAdd);
+          cartUpdated = true;
+        }
+      } catch (itemError) {
+        console.error("Error processing cart item:", itemError, guestItem);
+        // Continue with next item instead of failing entire merge
+      }
+    });
+    
+
+    if (cartUpdated) {
+      // Use findByIdAndUpdate to avoid triggering pre-save hooks
+      await User.findByIdAndUpdate(
+        user._id,
+        { cart: user.cart },
+        { new: true, runValidators: false }
+      );
+      console.log("Cart merged successfully");
+      // Fetch updated user to return latest cart
+      const updatedUser = await User.findById(user._id);
+      return res.json({ message: "Cart merged successfully", cart: updatedUser.cart });
+    }
+
+    return res.json({ message: "No new items merged", cart: user.cart });
+  } catch (error) {
+    console.error("Error merging cart:", error);
+    console.error("Error stack:", error.stack);
+    return res.status(500).json({ 
+      message: "Error merging cart", 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
-
-  return res.json({ message: "No new items merged", cart: user.cart });
 });
 
 

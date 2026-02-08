@@ -86,7 +86,8 @@
   userSchema.pre("save", async function(next) {
       const user = this;
     
-      if (user.isModified('password') || user.isNew) {
+      // Only hash password if it's being modified and exists
+      if ((user.isModified('password') || user.isNew) && user.password) {
         try {
           // Generate a salt
           const salt = await bcrypt.genSalt(10);
@@ -98,7 +99,10 @@
           return next(err);
         }
       }
-      next();
+      // Always call next() to continue the save operation
+      if (typeof next === 'function') {
+        next();
+      }
     });
     
     // Method to compare input password with the stored hashed password

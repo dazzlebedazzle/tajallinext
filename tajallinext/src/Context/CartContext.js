@@ -178,14 +178,29 @@ useEffect(() => {
 
     try {
       if (localCart.length > 0) {
-        // Merge local cart with server
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/user/cart/mergecart`,
-          { guestCart: localCart },
-          {
-            headers: { Authorization: `Bearer ${authState.token}` },
-          }
-        );
+        // Validate and clean local cart before sending
+        const cleanedCart = localCart.map(item => ({
+          productId: item.productId,
+          title: item.title || 'Product',
+          image: item.image || '',
+          category: item.category || 'General',
+          weight: Number(item.weight) || 0,
+          totalPrice: Number(item.totalPrice) || 0,
+          quantity: Number(item.quantity) || 1,
+          slug: item.slug || `product-${item.productId}-${item.weight}`,
+          cartId: item.cartId || undefined,
+        })).filter(item => item.productId && item.weight > 0);
+
+        if (cleanedCart.length > 0) {
+          // Merge local cart with server
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/user/cart/mergecart`,
+            { guestCart: cleanedCart },
+            {
+              headers: { Authorization: `Bearer ${authState.token}` },
+            }
+          );
+        }
       }
 
       // Fetch the updated cart from server
@@ -201,6 +216,8 @@ useEffect(() => {
 
     } catch (error) {
       console.error("Cart sync error:", error);
+      // Don't throw error, just log it - cart merge is not critical
+      // User can still proceed with their cart
     }
   };
 

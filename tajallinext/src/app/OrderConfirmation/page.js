@@ -7,7 +7,7 @@ import './OrderConfirmation.css';
 import logo from '../../../public/assets/logo.webp';
 import { useOrder } from '@/Context/OrderContext';
 import Image from 'next/image';
-
+import Loader from '@/Components/Loader/Loader';
 
 const OrderConfirmation = () => {
     const orderDetail = useOrder();
@@ -52,6 +52,8 @@ const OrderConfirmation = () => {
 
     const [couponDiscount, setCouponDiscount] = useState(0);
     const [referralDiscount, setReferralDiscount] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
@@ -84,11 +86,19 @@ const OrderConfirmation = () => {
 
     // Initialize shipping details with total pay
     useEffect(() => {
-        if (orderDetails) {
+        if (orderDetails && orderDetails.length > 0) {
             const initialTotal = orderDetails.reduce((acc, product) => acc + product.price, 0);
             setTotalPay(initialTotal);
+            // If orderDetails are loaded and no token (guest user), hide loader
+            if (!token) {
+                setIsLoading(false);
+            }
+        } else if (!orderDetails || orderDetails.length === 0) {
+            // If no orderDetails, redirect or show error
+            console.warn('No order details found');
+            setIsLoading(false);
         }
-    }, [orderDetails]);
+    }, [orderDetails, token]);
 
     // Check for coupon in localStorage on component mount
     useEffect(() => {
@@ -158,34 +168,48 @@ const OrderConfirmation = () => {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getuser`, config);
                 setShippingDetails(prevDetails => ({
                     ...prevDetails,
-                    billing_customer_name: response.data.firstName,
-                    billing_last_name: response.data.lastName,
-                    billing_address: response.data.address,
-                    billing_city: response.data.city,
-                    billing_pincode: response.data.pincode,
-                    billing_state: response.data.state,
-                    billing_email: response.data.email,
-                    billing_phone: response.data.phone
+                    billing_customer_name: response.data.firstName || response.data.firstname || '',
+                    billing_last_name: response.data.lastName || response.data.lastname || '',
+                    billing_address: response.data.address || '',
+                    billing_city: response.data.city || '',
+                    billing_pincode: response.data.pincode || '',
+                    billing_state: response.data.state || '',
+                    billing_email: response.data.email || '',
+                    billing_phone: response.data.phone || response.data.mobile || ''
                 }));
 
             } catch (error) {
                 console.error('Error fetching user details:', error);
+            } finally {
+                // Hide loader after user data is fetched (or if no token, hide immediately)
+                setIsLoading(false);
             }
         };
 
         if (token) {
             fetchUserData();
+        } else {
+            // If no token, still hide loader after a short delay to allow orderDetails to load
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 500);
         }
     }, [token]);
 
         useEffect(() => {
-        const userinfolocal= JSON.parse(localStorage.getItem('user'))
-        setUserinfo(userinfolocal);
-        if (userinfolocal.discount >= 100) {
-            const referral = shippingDetails.sub_total * 0.1;
-            setReferralDiscount(referral);
-        } else {
-            setReferralDiscount(0);
+        try {
+            const userinfolocal = JSON.parse(localStorage.getItem('user') || 'null');
+            if (userinfolocal) {
+                setUserinfo(userinfolocal);
+                if (userinfolocal.discount >= 100) {
+                    const referral = shippingDetails.sub_total * 0.1;
+                    setReferralDiscount(referral);
+                } else {
+                    setReferralDiscount(0);
+                }
+            }
+        } catch (error) {
+            console.error('Error parsing user info:', error);
         }
         }, [])
 
@@ -208,7 +232,7 @@ const OrderConfirmation = () => {
         const { name, value } = e.target;
         setShippingDetails(prevDetails => ({
             ...prevDetails,
-            [name]: value
+            [name]: value || ''
         }));
     };
 
@@ -306,6 +330,8 @@ const OrderConfirmation = () => {
             return;
         }
 
+        setIsProcessingPayment(true); // Show loader when payment starts
+
         try {
             console.log('calculateDeliveryCharge called from handlePayment');
             const deliveryCharge = calculateDeliveryCharge();
@@ -315,36 +341,56 @@ const OrderConfirmation = () => {
 
             const razorpayresponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/createOrder`, {
                 amount: amountInPaisa,
-                currency: 'INR',
-                name: 'Product Name',
-                description: 'Product Description'
+                currency: 'INR'
             });
 
-            const { currency, amount, razorpay_signature } = razorpayresponse.data.order;
+            if (!razorpayresponse.data.success) {
+                throw new Error(razorpayresponse.data.msg || 'Failed to create order');
+            }
+
+            const order = razorpayresponse.data.order;
             const order_id = razorpayresponse.data.order_id;
-            console.log(order_id);
-            console.log(razorpayresponse.data);
-            console.log(amount);
+            console.log('Razorpay Order ID:', order_id);
+            console.log('Order Details:', order);
+
+            // Validate Razorpay key
+            const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
+            if (!razorpayKey) {
+                throw new Error('Razorpay key not configured. Please check environment variables.');
+            }
+
+            // Validate order data
+            if (!order || !order.amount || !order_id) {
+                throw new Error('Invalid order data received from server');
+            }
 
             const options = {
-                
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-                amount: amount,
-                currency: currency,
+                key: razorpayKey,
+                amount: order.amount, // Already in paisa from Razorpay
+                currency: order.currency || 'INR',
                 order_id: order_id,
-                razorpay_signature: razorpay_signature,
+                name: 'Tajalli DryFruits',
+                description: 'Order Payment',
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment modal closed');
+                    }
+                },
                 handler: async function (response) {
                     try {
+                      setIsProcessingPayment(true); // Keep loader visible during payment processing
+                      
                       // 1. Verify payment first
                       const verifyResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/verify`, {
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_signature: response.razorpay_signature,
-                        applyReferral:useReferral,
-                        userId:userinfo.id
+                        applyReferral: useReferral && userinfo?.discount >= 100,
+                        userId: userinfo?.id
                       });
                   
                       if (!verifyResponse.data.success) {
+                        setIsProcessingPayment(false);
                         throw new Error('Payment verification failed');
                       }
                   
@@ -386,6 +432,7 @@ const OrderConfirmation = () => {
                       );
                   
                       if (!createOrderResponse.data.success) {
+                        setIsProcessingPayment(false);
                         throw new Error('Failed to create order');
                       }
                   
@@ -396,13 +443,13 @@ const OrderConfirmation = () => {
                         payment_id: response.razorpay_payment_id
                       });
                   
-                      // 5. Navigate to success page
+                      // 5. Navigate to success page (loader will hide on navigation)
                       router.push('/order-success');
                   
                     } catch (error) {
+                      setIsProcessingPayment(false);
                       console.error('Payment processing error:', error.message);
                       alert(`Payment failed: ${error.message}`);
-                      // Consider reverting any local state changes here if needed
                     }
                   },
                 prefill: {
@@ -416,16 +463,65 @@ const OrderConfirmation = () => {
             };
 
             if (typeof window !== 'undefined' && window.Razorpay) {
-                const rzp1 = new window.Razorpay(options);
-                rzp1.open();
+                console.log('Opening Razorpay payment modal with options:', {
+                    key: razorpayKey?.substring(0, 12) + '...',
+                    amount: options.amount,
+                    currency: options.currency,
+                    order_id: options.order_id
+                });
+                
+                try {
+                    const rzp1 = new window.Razorpay(options);
+                    
+                    // Add error handlers
+                    rzp1.on('payment.failed', function (response) {
+                        console.error('Payment failed:', response.error);
+                        alert(`Payment failed: ${response.error?.description || response.error?.reason || 'Unknown error'}`);
+                    });
+                    
+                    rzp1.on('payment.authorized', function (response) {
+                        console.log('Payment authorized:', response);
+                    });
+                    
+                    rzp1.open();
+                } catch (rzpError) {
+                    console.error('Error opening Razorpay modal:', rzpError);
+                    throw new Error(`Failed to open payment gateway: ${rzpError.message || 'Unknown error'}`);
+                }
             } else {
-                throw new Error('Razorpay SDK not loaded');
+                throw new Error('Razorpay SDK not loaded. Please refresh the page.');
             }
         } catch (error) {
-            console.error('Error during payment:', error.message);
-            alert('Payment failed. Please try again.');
+            setIsProcessingPayment(false);
+            console.error('Error during payment:', error);
+            console.error('Error details:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
+            alert(`Payment failed: ${error.response?.data?.error || error.response?.data?.msg || error.message || 'Please try again.'}`);
         }
     };
+
+    // Show loader while data is loading or payment is being processed
+    if (isLoading || isProcessingPayment || !orderDetails || orderDetails.length === 0) {
+        const loadingMessage = isProcessingPayment 
+            ? 'Confirming your order...' 
+            : 'Loading your order details...';
+        
+        return (
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                minHeight: '100vh',
+                flexDirection: 'column'
+            }}>
+                <Loader />
+                <p style={{ marginTop: '20px', fontSize: '18px', color: '#723207' }}>{loadingMessage}</p>
+            </div>
+        );
+    }
 
     return (
         <div className="order-confirmation-main">
@@ -505,14 +601,14 @@ const OrderConfirmation = () => {
                                     <div>
                                         <label>
                                             First Name:
-                                            <input type="text" name="billing_customer_name" value={shippingDetails.billing_customer_name} onChange={handleChange} />
+                                            <input type="text" name="billing_customer_name" value={shippingDetails.billing_customer_name || ''} onChange={handleChange} />
                                             {errors.billing_customer_name && <p className="error">{errors.billing_customer_name}</p>}
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Last Name:
-                                            <input type="text" name="billing_last_name" value={shippingDetails.billing_last_name} onChange={handleChange} />
+                                            <input type="text" name="billing_last_name" value={shippingDetails.billing_last_name || ''} onChange={handleChange} />
                                             {errors.billing_last_name && <p className="error">{errors.billing_last_name}</p>}
                                         </label>
                                     </div>
@@ -521,35 +617,35 @@ const OrderConfirmation = () => {
                                 <h3>Shipping Details</h3>
                                 <label>
                                     Address:
-                                    <input type="text" name="billing_address" value={shippingDetails.billing_address} onChange={handleChange} />
+                                    <input type="text" name="billing_address" value={shippingDetails.billing_address || ''} onChange={handleChange} />
                                     {errors.billing_address && <p className="error">{errors.billing_address}</p>}
                                 </label>
                                 <div className='customerdetails'>
                                     <label>
                                         City:
-                                        <input type="text" name="billing_city" value={shippingDetails.billing_city} onChange={handleChange} />
+                                        <input type="text" name="billing_city" value={shippingDetails.billing_city || ''} onChange={handleChange} />
                                         {errors.billing_city && <p className="error">{errors.billing_city}</p>}
                                     </label>
                                     <label>
                                         Pincode:
-                                        <input type="number" name="billing_pincode" value={shippingDetails.billing_pincode} onChange={handleChange} />
+                                        <input type="number" name="billing_pincode" value={shippingDetails.billing_pincode || ''} onChange={handleChange} />
                                         {errors.billing_pincode && <p className="error">{errors.billing_pincode}</p>}
                                     </label>
                                     <label>
                                         State:
-                                        <input type="text" name="billing_state" value={shippingDetails.billing_state} onChange={handleChange} />
+                                        <input type="text" name="billing_state" value={shippingDetails.billing_state || ''} onChange={handleChange} />
                                         {errors.billing_state && <p className="error">{errors.billing_state}</p>}
                                     </label>
                                 </div>
                                 <div className='customerdetails'>
                                     <label>
                                         Email:
-                                        <input type="email" name="billing_email" value={shippingDetails.billing_email} onChange={handleChange} />
+                                        <input type="email" name="billing_email" value={shippingDetails.billing_email || ''} onChange={handleChange} />
                                         {errors.billing_email && <p className="error">{errors.billing_email}</p>}
                                     </label>
                                     <label>
                                         Phone:
-                                        <input type="tel" name="billing_phone" value={shippingDetails.billing_phone} onChange={handleChange} />
+                                        <input type="tel" name="billing_phone" value={shippingDetails.billing_phone || ''} onChange={handleChange} />
                                         {errors.billing_phone && <p className="error">{errors.billing_phone}</p>}
                                     </label>
                                 </div>
@@ -577,12 +673,10 @@ const OrderConfirmation = () => {
 <button
   type="button"
   className="pay-btn"
-  onClick={() => alert('⚠️ Payment Gateway is under maintenance. Please try after some time.')}
+  onClick={handlePayment}
 >
   Pay Now
 </button>
-
-                            {/* <button type="button" className="pay-btn" onClick={handlePayment}>Pay Now</button> */}
                             
                         </div>
                     </div>

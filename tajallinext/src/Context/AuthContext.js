@@ -63,16 +63,25 @@ export const AuthProvider = ({ children }) => {
   const verifOtp = async (userData) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/otp/verifyOTP`, userData);
-      const { id, firstname, lastname, email, mobile, role, token, profileImage } = response.data;
+      const { id, firstname, lastname, email, mobile, role, token, profileImage, referredBy, discount, referralCode, referralLink } = response.data;
       
-      localStorage.setItem('user', JSON.stringify({ id, firstname, lastname, email, mobile, role }));
+      localStorage.setItem('user', JSON.stringify({ id, firstname, lastname, email, mobile, role, referredBy, discount, referralCode, referralLink }));
       localStorage.setItem('token', token);
       localStorage.setItem('profileImage', profileImage);
 
-      setAuthState({ isAuthenticated: true, user: { id, firstname, lastname, email, mobile, role, profileImage }, token });
-      router.push('/');
+      setAuthState({ 
+        isAuthenticated: true, 
+        user: { id, firstname, lastname, email, mobile, role, profileImage, referredBy, discount, referralCode, referralLink }, 
+        token 
+      });
+      
+      return { success: true };
     } catch (error) {
-      console.log("Invalid OTP")
+      console.log("Invalid OTP", error);
+      return { 
+        success: false, 
+        error: error?.response?.data?.error || error?.response?.data?.message || "Invalid OTP" 
+      };
     }
   };
 

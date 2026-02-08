@@ -23,6 +23,7 @@ const bannerRoutes = require('./routes/bannerRoutes');
 
 const bodyParser = require('body-parser');
 
+
 const errorHandler = require("./middleware/errorhandler");
 const prerenderMiddleware = require("./middleware/preRender");
 const corsOptions = {

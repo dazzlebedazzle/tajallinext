@@ -41,37 +41,143 @@ const checkToken = async (req, res, next) => {
   next();
 };
 
-const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_ID_KEY,
-  key_secret: process.env.RAZORPAY_SECRET_KEY
-});
+// Remove quotes and whitespace from environment variables if present
+const getRazorpayKeyId = () => {
+  const key = process.env.RAZORPAY_ID_KEY;
+  if (!key) return null;
+  // Remove surrounding quotes and trim whitespace
+  return key.replace(/^["']|["']$/g, '').trim();
+};
+
+const getRazorpaySecret = () => {
+  const secret = process.env.RAZORPAY_SECRET_KEY;
+  if (!secret) return null;
+  // Remove surrounding quotes and trim whitespace
+  return secret.replace(/^["']|["']$/g, '').trim();
+};
+
+const razorpayKeyId = getRazorpayKeyId();
+const razorpaySecret = getRazorpaySecret();
+
+// Debug logging (only show first and last few characters for security)
+if (razorpayKeyId && razorpaySecret) {
+  console.log('✅ Razorpay credentials loaded');
+  console.log('Key ID:', razorpayKeyId.substring(0, 8) + '...' + razorpayKeyId.substring(razorpayKeyId.length - 4));
+  console.log('Secret:', razorpaySecret.substring(0, 4) + '...' + razorpaySecret.substring(razorpaySecret.length - 4));
+  console.log('Key ID length:', razorpayKeyId.length, '(expected: ~20)');
+  console.log('Secret length:', razorpaySecret.length, '(expected: ~32)');
+} else {
+  console.error('❌ Razorpay credentials not found in environment variables!');
+  console.error('Please set RAZORPAY_ID_KEY and RAZORPAY_SECRET_KEY in your .env file');
+  console.error('Current values:', {
+    keyId: razorpayKeyId ? 'Set (hidden)' : 'Missing',
+    secret: razorpaySecret ? 'Set (hidden)' : 'Missing'
+  });
+}
+
+const razorpayInstance = razorpayKeyId && razorpaySecret ? new Razorpay({
+  key_id: razorpayKeyId,
+  key_secret: razorpaySecret
+}) : null;
+
+if (razorpayInstance) {
+  console.log('✅ Razorpay instance created successfully');
+} else {
+  console.error('❌ Failed to create Razorpay instance');
+}
 
 const createOrder = async (req, res) => {
   try {
-    const amount = req.body.amount * 100; // Amount in paisa
+    // Validate request body
+    if (!req.body.amount || isNaN(req.body.amount)) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Invalid amount provided' 
+      });
+    }
+
+    // Validate Razorpay credentials and instance
+    if (!razorpayKeyId || !razorpaySecret || !razorpayInstance) {
+      console.error('Razorpay credentials missing or invalid');
+      console.error('Key ID present:', !!razorpayKeyId);
+      console.error('Secret present:', !!razorpaySecret);
+      return res.status(500).json({ 
+        success: false, 
+        msg: 'Payment gateway configuration error. Please contact administrator.' 
+      });
+    }
+
+    const amount = Math.round(Number(req.body.amount) * 100); // Amount in paisa (minimum 100 paisa = 1 INR)
+    
+    if (amount < 100) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Minimum order amount is ₹1' 
+      });
+    }
+
     const options = {
       amount: amount,
       currency: 'INR',
-      receipt: 'razorUser@gmail.com'
+      receipt: `receipt_${Date.now()}`,
+      payment_capture: 1 // Auto capture payment
     };
 
-    const response=razorpayInstance.orders.create(options, (err, order) => {
-      if (err) {
-        console.error('Error creating Razorpay order:', err);
-        return res.status(400).json({ success: false, msg: 'Failed to create order' });
-      }
+    console.log('Creating Razorpay order with options:', { ...options, key_id: razorpayKeyId?.substring(0, 10) + '...' });
+    console.log('Razorpay Key ID length:', razorpayKeyId?.length);
+    console.log('Razorpay Secret length:', razorpaySecret?.length);
 
-      res.status(200).json({
-        success: true,
-        msg: 'Order created successfully',
-        order: order,
-        order_id: order.id,
-        razorpay_signature: response.generated_signature
-      });
+    // Use promise-based approach instead of callback
+    const order = await razorpayInstance.orders.create(options);
+    
+    console.log('Razorpay order created successfully:', order.id);
+    
+    res.status(200).json({
+      success: true,
+      msg: 'Order created successfully',
+      order: order,
+      order_id: order.id
     });
   } catch (error) {
-    console.error('Error in createOrder function:', error);
-    res.status(500).json({ success: false, msg: 'Internal server error' });
+    console.error('Error creating Razorpay order:', error);
+    
+    // Extract error details from Razorpay error object
+    const errorDescription = error.error?.description || error.description || error.message || 'Unknown error';
+    const errorCode = error.error?.code || error.code || 'UNKNOWN_ERROR';
+    const statusCode = error.statusCode || 500;
+    
+    console.error('Error details:', {
+      statusCode: statusCode,
+      errorCode: errorCode,
+      description: errorDescription,
+      fullError: JSON.stringify(error, null, 2)
+    });
+    
+    // Check if it's an authentication error
+    if (statusCode === 401 || errorDescription.includes('Authentication failed') || errorCode === 'BAD_REQUEST_ERROR') {
+      console.error('❌ Razorpay Authentication Failed!');
+      console.error('Please check your RAZORPAY_ID_KEY and RAZORPAY_SECRET_KEY in .env file');
+      console.error('Key ID being used:', razorpayKeyId?.substring(0, 12) + '...');
+      console.error('Key ID length:', razorpayKeyId?.length);
+      console.error('Secret length:', razorpaySecret?.length);
+      console.error('⚠️ IMPORTANT: Make sure:');
+      console.error('   1. Remove quotes from .env file (RAZORPAY_ID_KEY=rzp_live_xxx, not "rzp_live_xxx")');
+      console.error('   2. Keys match (both test or both live)');
+      console.error('   3. No extra spaces or characters');
+      console.error('   4. Restart server after changing .env file');
+      return res.status(500).json({ 
+        success: false, 
+        msg: 'Payment gateway authentication failed. Please check server configuration.',
+        error: 'Authentication failed - Invalid Razorpay credentials. Check server logs for details.'
+      });
+    }
+    
+    res.status(statusCode >= 400 && statusCode < 600 ? statusCode : 500).json({ 
+      success: false, 
+      msg: 'Failed to create order',
+      error: errorDescription,
+      errorCode: errorCode
+    });
   }
 };
 
@@ -82,32 +188,57 @@ const verifyPayment = async (req, res) => {
     razorpay_order_id,
     razorpay_signature,
     applyReferral,
-    userId // <-- boolean: true if user chose to apply
+    userId
   } = req.body;
 
   try {
-    const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET_KEY);
+    // Validate required fields
+    if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
+      return res.status(400).json({ 
+        success: false, 
+        msg: 'Missing required payment verification fields' 
+      });
+    }
+
+    // Use the cleaned secret key
+    const secretKey = razorpaySecret || getRazorpaySecret();
+    if (!secretKey) {
+      console.error('Razorpay secret key not found');
+      return res.status(500).json({ 
+        success: false, 
+        msg: 'Payment gateway configuration error' 
+      });
+    }
+
+    const hmac = crypto.createHmac('sha256', secretKey);
     hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
     const generated_signature = hmac.digest('hex');
+
+    console.log('Verifying payment signature...');
+    console.log('Order ID:', razorpay_order_id);
+    console.log('Payment ID:', razorpay_payment_id);
+    console.log('Signature match:', generated_signature === razorpay_signature);
 
     if (generated_signature === razorpay_signature) {
       // ✅ Payment verified
 
-      if (applyReferral) {
-        console.log(req.user)
-     
-        const user = await User.findById(userId);
+      if (applyReferral && userId) {
+        try {
+          const user = await User.findById(userId);
 
-        if (!user) {
-          return res.status(404).json({ success: false, msg: "User not found" });
+          if (!user) {
+            console.warn('User not found for referral discount:', userId);
+          } else if ((user.discount || 0) >= 100) {
+            user.discount -= 100;
+            await user.save();
+            console.log('Referral discount applied, 100 points deducted');
+          } else {
+            console.warn('Insufficient referral points for user:', userId);
+          }
+        } catch (referralError) {
+          console.error('Error applying referral discount:', referralError);
+          // Don't fail payment verification if referral discount fails
         }
-
-        if ((user.discount || 0) < 100) {
-          return res.status(400).json({ success: false, msg: "Insufficient referral points" });
-        }
-
-        user.discount -= 100;
-        await user.save();
       }
 
       res.json({
@@ -115,11 +246,21 @@ const verifyPayment = async (req, res) => {
         msg: "Payment verified" + (applyReferral ? " and 100 points deducted" : ""),
       });
     } else {
-      res.status(400).json({ success: false, msg: 'Payment verification failed' });
+      console.error('Payment signature verification failed');
+      console.error('Expected:', generated_signature);
+      console.error('Received:', razorpay_signature);
+      res.status(400).json({ 
+        success: false, 
+        msg: 'Payment verification failed - Invalid signature' 
+      });
     }
   } catch (error) {
     console.error('Error verifying payment:', error);
-    res.status(500).json({ success: false, msg: 'Internal server error' });
+    res.status(500).json({ 
+      success: false, 
+      msg: 'Internal server error',
+      error: error.message 
+    });
   }
 };
 

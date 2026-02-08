@@ -29,18 +29,18 @@ const defaultOptions = {
   },
 };
 
-
 const Cart = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, updateQuantity, addToCart } = useCart();
   const { verifOtp } = useContext(AuthContext);
   const { setOrderDetails } = useOrder();
   const router = useRouter(); // Use Next.js router
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState("");
-  const [mobileError, setMobileError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [isLoadingOtp, setIsLoadingOtp] = useState(false);
 
 
   if (!Array.isArray(cart)) {
@@ -61,24 +61,28 @@ const Cart = ({ isOpen, onClose }) => {
     }
   };
 
-  const validateMobile = (number) => {
-    const mobileRegex = /^[0-9]{10}$/;
-    return mobileRegex.test(number);
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const handleSendOtp = async () => {
-    if (!validateMobile(mobileNumber)) {
-      setMobileError("Please enter a valid 10-digit mobile number.");
+    if (!validateEmail(emailAddress)) {
+      setEmailError("Please enter a valid email address.");
       return;
     }
-    setMobileError("");
+    setEmailError("");
+    setIsLoadingOtp(true);
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/otp/sendOTP`, {
-        mobile: mobileNumber,
+        email: emailAddress,
       });
       setOtpSent(true);
+      setError("");
     } catch (err) {
-      setError("User Not Registerd");
+      setError(err?.response?.data?.error || "User Not Registered");
+    } finally {
+      setIsLoadingOtp(false);
     }
   };
 
@@ -91,7 +95,7 @@ const Cart = ({ isOpen, onClose }) => {
     }
 
     try {
-      const response = await verifOtp({ mobile: mobileNumber, otp });
+      const response = await verifOtp({ email: emailAddress, otp });
       const token = localStorage.getItem("token");
       if (token) {
         setShowLoginPopup(false);
@@ -117,11 +121,11 @@ const Cart = ({ isOpen, onClose }) => {
         }));
         router.push("/OrderConfirmation", { state: { orderDetails } }); // Use Next.js router
       } else {
-        setError(response?.message || "Invalid OTP. Please try again.");
+        setError(response?.error || response?.message || "Invalid OTP. Please try again.");
       }
     } catch (err) {
       console.error("OTP Verification Error:", err.response?.data || err.message);
-      setError("Invalid OTP. Please try again.");
+      setError(err?.response?.data?.error || "Invalid OTP. Please try again.");
     }
   };
 
@@ -264,8 +268,8 @@ const handleProceedToPayment = () => {
           </div>
         ) : (
           <>
-            {cart.map((item) => (
-              <div key={item.cartId} className="cart-item">
+            {cart.map((item, index) => (
+              <div key={item.cartId || `${item.productId}-${item.weight}-${index}`} className="cart-item">
                 <Image
                 width={500} height={500}
                   src={item.image}
@@ -338,26 +342,31 @@ const handleProceedToPayment = () => {
               <IoIosCloseCircleOutline />
             </button>
           
-            {!otpSent ? (
+            {isLoadingOtp ? (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px', flexDirection: 'column' }}>
+                <Loader />
+                <p style={{ marginTop: '20px' }}>Sending OTP...</p>
+              </div>
+            ) : !otpSent ? (
               <>
                 <p style={{color:"red"}}>{error}</p>
-                <p>Enter your mobile number to continue:</p>
+                <p>Enter your email address to continue:</p>
                 <input
-                  type="tel"
-                  placeholder="Enter mobile number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  maxLength={10}
+                  type="email"
+                  placeholder="Enter email address"
+                  value={emailAddress}
+                  onChange={(e) => setEmailAddress(e.target.value)}
+                  disabled={isLoadingOtp}
                 />
-                <button className="login-btn" onClick={handleSendOtp}>
-                  Send OTP
+                <button className="login-btn" onClick={handleSendOtp} disabled={isLoadingOtp}>
+                  {isLoadingOtp ? 'Sending...' : 'Send OTP'}
                 </button>
-                {mobileError && <p className="error-message">{mobileError}</p>}
+                {emailError && <p className="error-message">{emailError}</p>}
               </>
             ) : (
               <>
                 <p>
-                  Enter the OTP sent to {mobileNumber}:{" "}
+                  Enter the OTP sent to {emailAddress}:{" "}
                   <sup
                     className="editnumbersup"
                     onClick={() => {
@@ -389,3 +398,8 @@ const handleProceedToPayment = () => {
 };
 
 export default Cart;
+
+
+
+
+

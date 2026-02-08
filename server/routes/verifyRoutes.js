@@ -75,6 +75,7 @@ const express = require('express');
 const router = express.Router();
 const { OAuth2Client } = require('google-auth-library');
 const otpCtrl = require('../controllers/Otpctrl');
+const emailOtpCtrl = require('../controllers/emailOtpCtrl');
 const { verifyGoogleToken, generateJWTToken } = require('../controllers/googlectrl');
 const User = require("../models/userModel");
 const {generateToken}=require("../config/jwtToken");
@@ -87,35 +88,28 @@ const client = new OAuth2Client(
   'http://localhost:3000/google-callback'
 );
 
-// Route to send OTP
+// Route to send Email OTP
 router.post('/sendOTP', async (req, res) => {
   try {
-    let { mobile } = req.body;
+    const { email } = req.body;
 
-    // Normalize the mobile number (remove +91, spaces, leading zeros)
-    if (mobile.startsWith('+91')) {
-      mobile = mobile.slice(3);
+    if (!email) {
+      return res.status(400).json({ success: false, error: "Email is required" });
     }
-    mobile = mobile.replace(/^0+/, '').replace(/\s+/g, '');
 
-    // Check if user is registered (with or without +91)
-    const user = await User.findOne({
-      $or: [
-        { mobile },
-        { mobile: `+91${mobile}` }
-      ]
-    });
+    // Check if user is registered
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ success: false, error: "User not registered" });
     }
 
-    // User is registered, send OTP
-    const result = await otpCtrl.sendOTP(mobile);
+    // User is registered, send Email OTP
+    const result = await emailOtpCtrl.sendEmailOTP(email);
     res.status(result.success ? 200 : 500).json(result);
 
   } catch (error) {
-    console.error("Error sending OTP:", error);
+    console.error("Error sending Email OTP:", error);
     res.status(500).json({ error: "Failed to send OTP" });
   }
 });
@@ -196,32 +190,25 @@ router.post('/sendOTP', async (req, res) => {
 
 router.post('/verifyOTP', async (req, res) => {
   try {
-    const { mobile, otp } = req.body;
+    const { email, otp } = req.body;
 
-    if (!mobile || !otp) {
-      return res.status(400).json({ error: "Mobile number and OTP are required." });
+    if (!email || !otp) {
+      return res.status(400).json({ error: "Email and OTP are required." });
     }
 
-    console.log("Verifying OTP for:", mobile);
+    console.log("Verifying Email OTP for:", email);
 
-    // Verify OTP with Twilio
-    const result = await otpCtrl.verifyOTP(`+91${mobile}`, otp);
+    // Verify Email OTP
+    const result = await emailOtpCtrl.verifyEmailOTP(email, otp);
     console.log("OTP verification result:", result);
 
     // If OTP is not valid, return early
     if (!result || !result.success) {
-      return res.status(400).json({ error: "Invalid or expired OTP. Please try again." });
+      return res.status(400).json({ error: result.error || "Invalid or expired OTP. Please try again." });
     }
 
     // OTP is valid, proceed to login flow
-    // const findUser = await User.findOne({ mobile });
-
-    const findUser = await User.findOne({
-      $or: [
-        { mobile },
-        { mobile: `+91${mobile}` }
-      ]
-    });
+    const findUser = await User.findOne({ email });
 
     if (!findUser) {
       return res.status(404).json({ error: "User not found." });
@@ -248,7 +235,7 @@ router.post('/verifyOTP', async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error during OTP verification/login:", error);
+    console.error("Error during Email OTP verification/login:", error);
     res.status(500).json({ error: "Something went wrong during verification." });
   }
 });

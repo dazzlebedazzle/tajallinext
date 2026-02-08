@@ -81,13 +81,18 @@ const Registration = () => {
   };
 
   const handleSendOtp = async () => {
+    if (!formData.email) {
+      setOtpError('Please enter your email address first.');
+      alert('Please enter your email address first.');
+      return;
+    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/otp/sendOTP`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ mobile: formData.mob }),
+        body: JSON.stringify({ email: formData.email }),
       });
 
       if (response.ok) {
@@ -111,7 +116,7 @@ const Registration = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ mobile: formData.mob, otp: formData.otp }),
+        body: JSON.stringify({ email: formData.email, otp: formData.otp }),
       });
 
       if (response.ok) {
