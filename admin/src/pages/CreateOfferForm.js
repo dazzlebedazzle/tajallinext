@@ -65,7 +65,7 @@ const CreateOfferForm = () => {
     try {
       const token = localStorage.getItem('token');
 
-      const res = await axios.put(
+      await axios.put(
         `/api/offer/${offerId}/image`,
         form,
         {

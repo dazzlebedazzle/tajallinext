@@ -3,8 +3,8 @@ import axios from 'axios';
 import './Categories.css';
 import Sidebar from '../components/Sidebar';
 import Loader from '../components/Loader';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { AuthContext } from '../components/auth'; 
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../components/auth';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -13,7 +13,7 @@ const Categories = () => {
   const [newCategoryDescription, setNewCategoryDescription] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-   const { authState, logout } =useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
 
   useEffect(() => {
     fetchCategories();

@@ -4,7 +4,7 @@ import './Products.css';
 import Sidebar from '../components/Sidebar';
 import { handleImageUpload } from '../components/imageUtils';
 import Loader from '../components/Loader';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../components/auth';
 
 const Products = () => {
@@ -574,7 +574,7 @@ const handleRemoveAboutProduct = (indexToRemove) => {
               <h3>{selectedProduct.title}</h3>
               <div className="product-images">
                 {selectedProduct.images.map((image, index) => (
-                  <img key={index} src={image} alt={`Product Image ${index + 1}`} />
+                  <img key={index} src={image} alt="" />
                 ))}
               </div>
               <p><strong>Category:</strong> {selectedProduct.category}</p>

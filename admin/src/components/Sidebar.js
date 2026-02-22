@@ -55,7 +55,7 @@ const Sidebar = () => {
       <div className={`container ${isSidebarOpen ? 'open' : ''}`}>
         <div className="navigation">
           <div className='clogo'>
-            <img src={tazallilogo}/>
+            <img src={tazallilogo} alt="Tazalli logo" />
           </div>
           <ul>
             <li>

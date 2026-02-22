@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
-import CreateOffer from './pages/CreateOffer';
 import Order from './pages/Order';
 import Home from './pages/home'; // Import the Home component
 import './App.css'; // Optional: for global styles

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { FiSearch } from 'react-icons/fi'; // Import search icon from react-icons/fi
 import { Bar } from 'react-chartjs-2';

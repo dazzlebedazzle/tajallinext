@@ -3,15 +3,15 @@ import axios from 'axios';
 import './SendCoupons.css'; // Ensure you create a corresponding CSS file for styling
 import Sidebar from  '../components/Sidebar';
 import Loader from '../components/Loader';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { AuthContext } from '../components/auth'; 
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../components/auth';
 
 const SendCoupons = () => {
   const [coupons, setCoupons] = useState([]);
   const [selectedCoupon, setSelectedCoupon] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { authState, logout } =useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
 
   useEffect(() => {
     // Fetch all available coupons for selection
@@ -39,11 +39,15 @@ const SendCoupons = () => {
     setIsLoading(true);
     try {
         const accessToken = localStorage.getItem('token');
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/send-emails`, { headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-        couponId: selectedCoupon,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/admin/send-emails`,
+        { couponId: selectedCoupon },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       setMessage('Coupons sent successfully!');
     } catch (error) {
       setMessage('Error sending coupons.');

@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-   const [authLoading, setAuthLoading] = useState(true);
+   const [authLoading] = useState(true);
   const navigate = useNavigate();
   const initialAuthState = {
     isAuthenticated: false,
     user: null,
     token: null,
-      authLoading,
+    authLoading,
   };
   const [authState, setAuthState] = useState(initialAuthState);
 
@@ -34,25 +34,6 @@ export const AuthProvider = ({ children }) => {
       }
     );
     return () => axios.interceptors.response.eject(interceptor);
-  }, []);
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    console.log(userStr,token)
-    if (userStr && token) {
-      try {
-        const user = JSON.parse(userStr);
-        setAuthState({
-          isAuthenticated: true,
-          user,
-          token,
-        });
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        handleLogout(); // Clear invalid user data if parsing fails
-      }
-    }
   }, []);
 
   const login = async (email, password) => {
@@ -118,10 +99,26 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     setAuthState(initialAuthState);
-    
+  };
 
-   
- };
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (userStr && token) {
+      try {
+        const user = JSON.parse(userStr);
+        setAuthState({
+          isAuthenticated: true,
+          user,
+          token,
+        });
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        handleLogout();
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- handleLogout is stable, init only once
+  }, []);
 
   return (
     <AuthContext.Provider value={{ authState, login, logout }}>

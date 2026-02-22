@@ -34,7 +34,7 @@ const Login = () => {
     <div className='containfill'>
       
      <div className='img_div'>
-     <img src={logotazalli} alt="Description of the image" />
+     <img src={logotazalli} alt="Tajalli logo" />
      </div>
    
     <div className="login-container">

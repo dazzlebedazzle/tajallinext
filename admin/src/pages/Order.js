@@ -3,16 +3,15 @@ import axios from 'axios';
 import './Order.css'; // Import your CSS file
 import Sidebar from '../components/Sidebar';
 import Loader from '../components/Loader';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { AuthContext } from '../components/auth'; 
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../components/auth';
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null); // State to manage selected order
-  const [showDetailsPopup, setShowDetailsPopup] = useState(false); // State to manage popup visibility
-     const { authState, logout } =useContext(AuthContext);
-  const [showCancelPopup, setShowCancelPopup] = useState(false); // State for cancel popup
-  const [orderToCancel, setOrderToCancel] = useState(null); 
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showDetailsPopup, setShowDetailsPopup] = useState(false);
+  const { authState } = useContext(AuthContext);
+  const [showCancelPopup, setShowCancelPopup] = useState(false); 
 
   useEffect(() => {
     const fetchOrders = async () => {

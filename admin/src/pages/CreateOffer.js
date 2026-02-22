@@ -2,9 +2,9 @@ import React, { useState, useEffect,useContext } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import './CreateOffer.css';
-import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete, AiOutlineClose, AiOutlineInfoCircle, AiOutlineLink } from 'react-icons/ai';
+import { AiOutlinePlus, AiOutlineDelete, AiOutlineClose, AiOutlineLink } from 'react-icons/ai';
 import Loader from '../components/Loader';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../components/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,14 +21,11 @@ const CreateOffer = () => {
   const [productDetails, setProductDetails] = useState(null);
   const [showProductDetailsPopup, setShowProductDetailsPopup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { authState, logout } = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
   const [isOneTime, setIsOneTime] = useState(false);
   const [showDirectLinkPopup, setShowDirectLinkPopup] = useState(false);
   const [directLink, setDirectLink] = useState('');
   const [directLinkLoading, setDirectLinkLoading] = useState(false);
-  const [productName, setProductName] = useState('');
-  const [productSearchResults, setProductSearchResults] = useState([]);
-  const [showProductSearch, setShowProductSearch] = useState(false);
   const [productLoading, setProductLoading] = useState(false);
   const [isCheckingCoupon, setIsCheckingCoupon] = useState(false);
   const [couponStatus, setCouponStatus] = useState(null);
@@ -300,6 +297,7 @@ const CreateOffer = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars -- reserved for product search UI
   const searchProducts = async (query) => {
     try {
       const response = await axios.get(
@@ -462,10 +460,8 @@ const CreateOffer = () => {
     }
   };
 
-  const handleProductSelect = (product) => {
-    setProductName(product.name);
-    setShowProductSearch(false);
-  };
+  // eslint-disable-next-line no-unused-vars -- reserved for product search UI
+  const handleProductSelect = () => {};
 
   // Modified validateCouponName function
   const validateCouponName = (name) => {
@@ -477,9 +473,9 @@ const CreateOffer = () => {
 
   const handleDiscountLink = async (e) => {
     e.preventDefault();
-    setDirectLinkLoading(true);
+    setDiscountLinkLoading(true);
     setCouponStatus(null);
-    
+
     try {
       const formData = new FormData(e.target);
       const productId = formData.get('productId').trim();
@@ -489,13 +485,13 @@ const CreateOffer = () => {
 
       if (!productId || !discountAmount || !expiry) {
         toast.error('Product ID, Discount Amount, and Expiry Date are required');
-        setDirectLinkLoading(false);
+        setDiscountLinkLoading(false);
         return;
       }
 
       if (!productDetails) {
         toast.error('Please enter a valid Product ID and wait for details to load.');
-        setDirectLinkLoading(false);
+        setDiscountLinkLoading(false);
         return;
       }
 
@@ -508,7 +504,7 @@ const CreateOffer = () => {
 
       if (couponExists) {
         toast.error('A discount link for this amount already exists. Please try a different amount.');
-        setDirectLinkLoading(false);
+        setDiscountLinkLoading(false);
         return;
       }
 
@@ -571,7 +567,7 @@ const CreateOffer = () => {
       toast.error(errorMessage);
       setCouponStatus('error');
     } finally {
-      setDirectLinkLoading(false);
+      setDiscountLinkLoading(false);
     }
   };
 

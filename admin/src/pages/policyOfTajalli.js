@@ -1,15 +1,14 @@
 // PolicyOfTajalli.js
 
-import React, { useState, useEffect,useContext } from 'react';
-import './policyOfTajalli.css'
+import React, { useContext } from 'react';
+import './policyOfTajalli.css';
 import Sidebar from '../components/Sidebar';
 import Loader from '../components/Loader';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { AuthContext } from '../components/auth'; 
-
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../components/auth';
 
 const PolicyOfTajalli = () => {
-  const { authState, logout } =useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
   if (authState.authLoading) {
     return <Loader />; // or any other loading indicator
   }
