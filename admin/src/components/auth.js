@@ -16,6 +16,25 @@ export const AuthProvider = ({ children }) => {
   };
   const [authState, setAuthState] = useState(initialAuthState);
 
+  // Redirect to login when token expires (401)
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          const isLoginRequest = error.config?.url?.includes('/api/user/login');
+          if (!isLoginRequest) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.href = '/login';
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
 
   useEffect(() => {
     const userStr = localStorage.getItem('user');
