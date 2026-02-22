@@ -426,3 +426,38 @@ margin-bottom: 10px;
     
       }
 }
+
+/* Login prompt above Total Price (when user not logged in) */
+.order-login-prompt {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f5ebe0;
+  border: 1px solid #723207;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.order-login-prompt-text {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+.order-login-btn-top {
+  background: #723207;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.order-login-btn-top:hover {
+  opacity: 0.9;
+  background: #5a2806;
+}

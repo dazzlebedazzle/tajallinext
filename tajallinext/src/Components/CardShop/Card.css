@@ -525,11 +525,12 @@
     font-size: 12px;
   }
   
-  /* Media Queries for Responsive Design */
+  /* Media Queries for Responsive Design - use % so cards fit viewport */
   @media (max-width: 768px) {
     .card_shop {
-      width: 150px; /* Adjusted width for tablets and mobile devices */
-      /* margin-left: 10px;  */
+      width: calc(50% - 10px); /* 2 per row, fits viewport */
+      min-width: 0;
+      max-width: 100%;
     }
   
     .card_shop h2 {
@@ -540,8 +541,6 @@
       font-size: 12px; /* Adjusted font size */
     }
   
-    
-  
     .wishlist-icon {
       font-size: 18px; /* Adjusted icon size */
     }
@@ -549,7 +548,9 @@
   
   @media (max-width: 480px) {
     .card_shop {
-      width: 160px; /* Further adjusted width for smaller mobile devices */
+      width: calc(50% - 8px); /* 2 per row on small mobile */
+      min-width: 0;
+      max-width: 100%;
       padding: 8px; /* Adjusted padding */
     }
   
@@ -560,7 +561,6 @@
     .card_shop h3 {
       font-size: 10px; /* Adjusted font size */
     }
-  
   
     .card_shop .add {
       padding: 3px 5px; /* Adjusted button padding */

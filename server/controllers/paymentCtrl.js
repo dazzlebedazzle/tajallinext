@@ -41,20 +41,14 @@ const checkToken = async (req, res, next) => {
   next();
 };
 
-// Remove quotes and whitespace from environment variables if present
-const getRazorpayKeyId = () => {
-  const key = process.env.RAZORPAY_ID_KEY;
-  if (!key) return null;
-  // Remove surrounding quotes and trim whitespace
-  return key.replace(/^["']|["']$/g, '').trim();
+// Sanitize env value: remove quotes, newlines, carriage returns, and trim
+const sanitizeEnv = (val) => {
+  if (val == null || typeof val !== 'string') return null;
+  return val.replace(/^["'\s]+|["'\s\r\n]+$/g, '').replace(/\s+/g, '').trim() || null;
 };
 
-const getRazorpaySecret = () => {
-  const secret = process.env.RAZORPAY_SECRET_KEY;
-  if (!secret) return null;
-  // Remove surrounding quotes and trim whitespace
-  return secret.replace(/^["']|["']$/g, '').trim();
-};
+const getRazorpayKeyId = () => sanitizeEnv(process.env.RAZORPAY_ID_KEY);
+const getRazorpaySecret = () => sanitizeEnv(process.env.RAZORPAY_SECRET_KEY);
 
 const razorpayKeyId = getRazorpayKeyId();
 const razorpaySecret = getRazorpaySecret();
@@ -62,10 +56,11 @@ const razorpaySecret = getRazorpaySecret();
 // Debug logging (only show first and last few characters for security)
 if (razorpayKeyId && razorpaySecret) {
   console.log('✅ Razorpay credentials loaded');
-  console.log('Key ID:', razorpayKeyId.substring(0, 8) + '...' + razorpayKeyId.substring(razorpayKeyId.length - 4));
-  console.log('Secret:', razorpaySecret.substring(0, 4) + '...' + razorpaySecret.substring(razorpaySecret.length - 4));
-  console.log('Key ID length:', razorpayKeyId.length, '(expected: ~20)');
-  console.log('Secret length:', razorpaySecret.length, '(expected: ~32)');
+  console.log('Key ID:', razorpayKeyId.substring(0, 8) + '...', 'length:', razorpayKeyId.length, '(expected: 20)');
+  console.log('Secret length:', razorpaySecret.length, '(expected: 32)');
+  if (razorpayKeyId.length !== 20 || razorpaySecret.length !== 32) {
+    console.warn('⚠️ Razorpay: Key must be 20 chars, Secret must be 32 chars. Get the full Secret from Dashboard → Settings → API Keys → Generate/Reveal secret for your Key.');
+  }
 } else {
   console.error('❌ Razorpay credentials not found in environment variables!');
   console.error('Please set RAZORPAY_ID_KEY and RAZORPAY_SECRET_KEY in your .env file');
@@ -140,44 +135,33 @@ const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating Razorpay order:', error);
-    
-    // Extract error details from Razorpay error object
-    const errorDescription = error.error?.description || error.description || error.message || 'Unknown error';
-    const errorCode = error.error?.code || error.code || 'UNKNOWN_ERROR';
-    const statusCode = error.statusCode || 500;
-    
-    console.error('Error details:', {
-      statusCode: statusCode,
-      errorCode: errorCode,
-      description: errorDescription,
-      fullError: JSON.stringify(error, null, 2)
-    });
-    
-    // Check if it's an authentication error
-    if (statusCode === 401 || errorDescription.includes('Authentication failed') || errorCode === 'BAD_REQUEST_ERROR') {
-      console.error('❌ Razorpay Authentication Failed!');
-      console.error('Please check your RAZORPAY_ID_KEY and RAZORPAY_SECRET_KEY in .env file');
-      console.error('Key ID being used:', razorpayKeyId?.substring(0, 12) + '...');
-      console.error('Key ID length:', razorpayKeyId?.length);
-      console.error('Secret length:', razorpaySecret?.length);
-      console.error('⚠️ IMPORTANT: Make sure:');
-      console.error('   1. Remove quotes from .env file (RAZORPAY_ID_KEY=rzp_live_xxx, not "rzp_live_xxx")');
-      console.error('   2. Keys match (both test or both live)');
-      console.error('   3. No extra spaces or characters');
-      console.error('   4. Restart server after changing .env file');
-      return res.status(500).json({ 
-        success: false, 
+    const errObj = error && typeof error === 'object' ? error : {};
+    const errorDescription = errObj.error?.description || errObj.description || errObj.message || (error && String(error)) || 'Unknown error';
+    const errorCode = errObj.error?.code || errObj.code || 'UNKNOWN_ERROR';
+    const statusCode = typeof errObj.statusCode === 'number' ? errObj.statusCode : 500;
+
+    console.error('Error details:', { statusCode, errorCode, description: errorDescription });
+
+    if (statusCode === 401 || /authentication failed/i.test(String(errorDescription)) || errorCode === 'BAD_REQUEST_ERROR') {
+      console.error('❌ Razorpay Authentication Failed! Check RAZORPAY_ID_KEY and RAZORPAY_SECRET_KEY in .env (no quotes, both Live or both Test).');
+      return res.status(500).json({
+        success: false,
         msg: 'Payment gateway authentication failed. Please check server configuration.',
         error: 'Authentication failed - Invalid Razorpay credentials. Check server logs for details.'
       });
     }
-    
-    res.status(statusCode >= 400 && statusCode < 600 ? statusCode : 500).json({ 
-      success: false, 
-      msg: 'Failed to create order',
-      error: errorDescription,
-      errorCode: errorCode
-    });
+
+    try {
+      res.status(statusCode >= 400 && statusCode < 600 ? statusCode : 500).json({
+        success: false,
+        msg: 'Failed to create order',
+        error: errorDescription,
+        errorCode: errorCode
+      });
+    } catch (resErr) {
+      console.error('Failed to send error response:', resErr);
+      res.status(500).json({ success: false, msg: 'Failed to create order', error: 'Server error' });
+    }
   }
 };
 

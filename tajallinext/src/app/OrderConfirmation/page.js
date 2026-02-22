@@ -1,17 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import './OrderConfirmation.css';
 import logo from '../../../public/assets/logo.webp';
 import { useOrder } from '@/Context/OrderContext';
+import { AuthContext } from '@/Context/AuthContext';
 import Image from 'next/image';
 import Loader from '@/Components/Loader/Loader';
+import { IoIosCloseCircleOutline } from 'react-icons/io';
+import { FaEdit } from 'react-icons/fa';
 
 const OrderConfirmation = () => {
     const orderDetail = useOrder();
     const { updateOrderState } = useOrder();
+    const { verifOtp } = useContext(AuthContext);
     const router = useRouter();
     const searchParams = useSearchParams();
     const couponFromUrl = searchParams.get('coupon');
@@ -55,7 +59,53 @@ const OrderConfirmation = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
+    // Login popup (shown when guest clicks Pay Now)
+    const [showLoginPopup, setShowLoginPopup] = useState(false);
+    const [loginEmail, setLoginEmail] = useState('');
+    const [loginOtp, setLoginOtp] = useState('');
+    const [loginOtpSent, setLoginOtpSent] = useState(false);
+    const [loginError, setLoginError] = useState('');
+    const [loginEmailError, setLoginEmailError] = useState('');
+    const [isLoadingOtp, setIsLoadingOtp] = useState(false);
+
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    const handleLoginSendOtp = async () => {
+        if (!validateEmail(loginEmail)) {
+            setLoginEmailError('Please enter a valid email address.');
+            return;
+        }
+        setLoginEmailError('');
+        setIsLoadingOtp(true);
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/otp/sendOTP`, { email: loginEmail });
+            setLoginOtpSent(true);
+            setLoginError('');
+        } catch (err) {
+            setLoginError(err?.response?.data?.error || 'User Not Registered');
+        } finally {
+            setIsLoadingOtp(false);
+        }
+    };
+
+    const handleLoginOtpVerification = async (e) => {
+        e.preventDefault();
+        if (!loginOtp) {
+            setLoginError('Please enter the OTP.');
+            return;
+        }
+        try {
+            await verifOtp({ email: loginEmail, otp: loginOtp });
+            const userLocal = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+            if (userLocal) setUserinfo(JSON.parse(userLocal));
+            setShowLoginPopup(false);
+            setLoginError('');
+        } catch (err) {
+            setLoginError(err?.response?.data?.error || 'Invalid OTP. Please try again.');
+        }
+    };
 
     // Function to apply coupon
     const applyCoupon = async (code) => {
@@ -142,7 +192,7 @@ const OrderConfirmation = () => {
         const checked = e.target.checked;
         setUseReferral(checked);
     
-        if (checked && userinfo.discount >= 100) {
+        if (checked && userinfo?.discount >= 100) {
             const referral = shippingDetails.sub_total * 0.1;
             setReferralDiscount(referral);
             setCouponDiscount(0);
@@ -493,27 +543,24 @@ const OrderConfirmation = () => {
             }
         } catch (error) {
             setIsProcessingPayment(false);
-            console.error('Error during payment:', error);
-            console.error('Error details:', {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
-            alert(`Payment failed: ${error.response?.data?.error || error.response?.data?.msg || error.message || 'Please try again.'}`);
+            const data = error.response?.data;
+            const msg = data?.error || data?.msg || error.message || 'Please try again.';
+            console.error('Error during payment:', error.response?.status, data || error.message);
+            alert(`Payment failed: ${msg}`);
         }
     };
 
-    // Show loader while data is loading or payment is being processed
+    // Show loader while loading order or processing payment
     if (isLoading || isProcessingPayment || !orderDetails || orderDetails.length === 0) {
-        const loadingMessage = isProcessingPayment 
-            ? 'Confirming your order...' 
+        const loadingMessage = isProcessingPayment
+            ? 'Confirming your order...'
             : 'Loading your order details...';
-        
+
         return (
-            <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 minHeight: '100vh',
                 flexDirection: 'column'
             }}>
@@ -532,6 +579,7 @@ const OrderConfirmation = () => {
             <div className="mainflex container">
                 <div className='sideflex'>
                     {renderProductDetails()}
+                   
                     <hr></hr>
                     <div className='totalprice'>
                         <div className='p1'>
@@ -568,7 +616,8 @@ const OrderConfirmation = () => {
                             </h2>
                         )}
                         <hr></hr>
-                        {userinfo.discount >=100 && (
+                        
+                        {userinfo?.discount >= 100 && (
                             <>
                         <div className="form-check d-flex align-items-center gap-2">
                         <input className="form-check-input" type="checkbox" value="" id="checkChecked" checked={useReferral}
@@ -591,6 +640,19 @@ const OrderConfirmation = () => {
                         </div>
                     </div>
                 </div>
+                {!token && (
+                        <div className="order-login-prompt">
+                            <p className="order-login-prompt-text">Login to continue with your order</p>
+                            <button
+                                type="button"
+                                className="order-login-btn-top"
+                                onClick={() => router.push('/Login?redirect=/OrderConfirmation')}
+                            >
+                                Login
+                            </button>
+                        </div>
+                    )}
+                {token && (
                 <div className="order-confirmation-container">
                     {renderProgressBar()}
                     <div className="checkout-content">
@@ -681,8 +743,55 @@ const OrderConfirmation = () => {
                         </div>
                     </div>
                 </div>
+                )}
             </div>
-                  </div>
+
+            {/* Login popup when guest clicks Pay Now */}
+            {showLoginPopup && (
+                <div className="order-login-overlay" onClick={() => setShowLoginPopup(false)}>
+                    <div className="order-login-popup" onClick={(e) => e.stopPropagation()}>
+                        <button type="button" className="order-login-close" onClick={() => setShowLoginPopup(false)} aria-label="Close">
+                            <IoIosCloseCircleOutline />
+                        </button>
+                        <h3>Login to continue payment</h3>
+                        {isLoadingOtp ? (
+                            <div className="order-login-loading">
+                                <Loader />
+                                <p>Sending OTP...</p>
+                            </div>
+                        ) : !loginOtpSent ? (
+                            <>
+                                {loginError && <p className="order-login-err">{loginError}</p>}
+                                <p>Enter your email to receive OTP:</p>
+                                <input
+                                    type="email"
+                                    placeholder="Enter email address"
+                                    value={loginEmail}
+                                    onChange={(e) => setLoginEmail(e.target.value)}
+                                />
+                                <button type="button" className="order-login-btn" onClick={handleLoginSendOtp} disabled={isLoadingOtp}>
+                                    Send OTP
+                                </button>
+                                {loginEmailError && <p className="order-login-err">{loginEmailError}</p>}
+                            </>
+                        ) : (
+                            <>
+                                <p>Enter OTP sent to {loginEmail} <sup className="order-login-edit" onClick={() => { setLoginOtpSent(false); setLoginOtp(''); }}><FaEdit /></sup></p>
+                                <input
+                                    type="text"
+                                    placeholder="Enter OTP"
+                                    value={loginOtp}
+                                    onChange={(e) => setLoginOtp(e.target.value)}
+                                    maxLength={6}
+                                />
+                                <button type="button" className="order-login-btn" onClick={handleLoginOtpVerification}>Verify OTP</button>
+                                {loginError && <p className="order-login-err">{loginError}</p>}
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
 

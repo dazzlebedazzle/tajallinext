@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import './Slider1.css';
 import imageUrls from '../../../public/assets/Data/ImgUrls';
@@ -16,6 +16,11 @@ const PrevArrow = ({ onClick }) => (
 
 const SimpleSlider = () => {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCategoryClick = (category) => {
     const slug = category.replace(/\s+/g, '-');
@@ -41,10 +46,12 @@ const SimpleSlider = () => {
     ]
   };
 
+  if (!mounted) {
+    return <div className="slider-container1 slider-container1-placeholder" />;
+  }
+
   return (
     <>
-     
-
       <div className="slider-container1">
         <Slider {...settings}>
           {imageUrls.map((item, idx) => (

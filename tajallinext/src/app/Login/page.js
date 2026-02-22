@@ -2,7 +2,7 @@
 
 import React, { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '@/Context/AuthContext';
@@ -17,6 +17,8 @@ import Loader from '@/Components/Loader/Loader';
 
 const Login = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -47,9 +49,7 @@ const Login = () => {
     try {
       await login({ email, password });
       await fetchUserDetails();
-      if (authState.isAuthenticated) {
-        router.push('/'); // Redirect to homepage or another page after successful login
-      }
+      router.push(redirectTo);
     } catch (err) {
       setError('Invalid email or password. Please try again.');
     }
@@ -170,7 +170,7 @@ const Login = () => {
     try {
       const response = await verifOtp({ email: otpEmail, otp });
       if (response && response.success) {
-        router.push('/');
+        router.push(redirectTo);
       } else {
         setError(response?.error || 'Incorrect OTP. Try Again');
       }
@@ -192,8 +192,11 @@ const Login = () => {
   useEffect(() => {
     if (authState.isAuthenticated) {
       fetchUserDetails();
+      if (redirectTo && redirectTo !== '/') {
+        router.replace(redirectTo);
+      }
     }
-  }, [authState.isAuthenticated]);
+  }, [authState.isAuthenticated, redirectTo, router]);
 
   if (authState.isAuthenticated) {
     return (

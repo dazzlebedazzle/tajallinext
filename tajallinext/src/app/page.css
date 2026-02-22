@@ -211,9 +211,22 @@
     width: 100%;
     height: fit-content;
 }
+.home {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 .nth{
   min-height: 170px;  /* Ensures space is reserved */
   overflow: hidden;  /* Prevents unexpected scroll */
+  max-width: 100%;
+}
+.categories-slider-placeholder {
+  min-height: 180px;
+  width: 100%;
+}
+.delicacies {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 @media (max-width: 768px){
     .home .first{

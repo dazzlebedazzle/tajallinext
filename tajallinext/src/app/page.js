@@ -8,7 +8,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const SimpleSlider = dynamic(() => import('@/Components/Slider/Slider'));
-const Slider1 = dynamic(() => import('@/Components/Slider1/Slider1'));
+const Slider1 = dynamic(() => import('@/Components/Slider1/Slider1'), {
+  ssr: false,
+  loading: () => <div className="categories-slider-placeholder" aria-hidden="true" />,
+});
 const Card = dynamic(() => import('@/Components/CardShop/CardShop'));
 const Offer = dynamic(() => import('@/Components/Offer/Offer'));
 const Branches = dynamic(() => import('@/Components/Branches/Branches'));

@@ -187,14 +187,6 @@ const Cart = ({ isOpen, onClose }) => {
 // };
 
 const handleProceedToPayment = () => {
-  const user = localStorage.getItem('token');
-  
-
-  if (!user) {
-    setShowLoginPopup(true);
-    return;
-  }
-
   if (cart.length === 0 || totalPrice <= 0) {
     setError('Your cart is empty. Please add products before checkout.');
     return;
@@ -209,13 +201,11 @@ const handleProceedToPayment = () => {
     weight: item.weight,
     quantity: item.quantity,
     price: item.totalPrice * item.quantity,
-    slug:item.slug
+    slug: item.slug
   }));
 
   setOrderDetails(orderDetails);
-  
-
-  router.push('/OrderConfirmation'); // ✅ Now this works
+  router.push('/OrderConfirmation');
   onClose();
 };
 
