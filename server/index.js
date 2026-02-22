@@ -47,6 +47,8 @@ const corsOptions = {
     // Admin
     'http://admin.tajalli.co.in',
     'https://admin.tajalli.co.in',
+    'http://admin.tajalli.in',
+    'https://admin.tajalli.in',
 
     // Direct IP (if really needed)
     'http://72.60.202.5:4000'
