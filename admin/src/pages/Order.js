@@ -38,7 +38,7 @@ const Order = () => {
       setShowCancelPopup(false);
     }, 2000);
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}/cancel`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/payment/orders/${orderId}/cancel`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}` // Assuming you store the token in localStorage
         }
@@ -138,7 +138,7 @@ if (authState.authLoading) {
               <p><strong>City:</strong> {selectedOrder.shippingAddress.city}</p>
               <p><strong>State:</strong> {selectedOrder.shippingAddress.state}</p>
               <p><strong>Country:</strong> {selectedOrder.shippingAddress.country}</p>
-              <p><strong>Postal Code:</strong> {selectedOrder.shippingAddress.postalCode}</p>
+              <p><strong>Postal Code:</strong> {selectedOrder.shippingAddress.pincode}</p>
               <p><strong>Phone No.:</strong> {selectedOrder.shippingAddress.phone}</p>
               <p><strong>Order ID (Shiprocket):</strong> {selectedOrder.shiprocket_order_id}</p>
               <p><strong>Payment ID:</strong> {selectedOrder.payment_id}</p>

@@ -78,7 +78,7 @@ app.use('/api/offer',offerRoutes);
 app.use('/api/email',emailRoutes);
 app.use('/api/admin',adminRoutes);
 app.use('/api/offer1',bannerRoutes);
-//app.use('/api/blogs',require("./routes/blogRoutes"))
+app.use('/api/blogs',require("./routes/blogRoutes"))
 app.use(errorHandler); 
 
 app.get('/', (req, res) => {

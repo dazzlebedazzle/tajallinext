@@ -1,5 +1,6 @@
 const Razorpay = require('razorpay');
 const Order = require('../models/orderModel');
+const mongoose = require('mongoose');
 const crypto = require('crypto');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
@@ -10,7 +11,12 @@ const nodemailer = require('nodemailer');
 
 const { log } = require('console');
 
-const SHIPROCKET_API_URL = process.env.SHIPROCKET_API_URL;
+const sanitizeEnv = (val) => {
+  if (val == null || typeof val !== 'string') return null;
+  return val.replace(/^["'\s]+|["'\s\r\n]+$/g, '').replace(/\s+/g, '').trim() || null;
+};
+
+const SHIPROCKET_API_URL = sanitizeEnv(process.env.SHIPROCKET_API_URL || process.env.SHIPROCKET_API_URL2);
 const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
 const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
 
@@ -18,6 +24,11 @@ let token = '';
 
 // Function to get Shiprocket token
 const getToken = async () => {
+  if (!SHIPROCKET_API_URL || !SHIPROCKET_EMAIL || !SHIPROCKET_PASSWORD) {
+    console.warn('Shiprocket credentials are incomplete; skipping token fetch');
+    return null;
+  }
+
   try {
     const response = await axios.post(`${SHIPROCKET_API_URL}/auth/login`, {
       email: SHIPROCKET_EMAIL,
@@ -25,26 +36,22 @@ const getToken = async () => {
     });
     token = response.data.token;
     console.log('Token fetched successfully');
+    return token;
   } catch (error) {
-    console.error('Error fetching token:', error);
+    console.error('Error fetching Shiprocket token:', error.response ? error.response.data : error.message);
+    return null;
   }
 };
-
-// Fetch the token initially
-getToken();
 
 // Middleware to check and refresh token if necessary
 const checkToken = async (req, res, next) => {
   if (!token) {
     await getToken();
   }
+  if (!token) {
+    return res.status(503).json({ message: 'Shiprocket is not configured' });
+  }
   next();
-};
-
-// Sanitize env value: remove quotes, newlines, carriage returns, and trim
-const sanitizeEnv = (val) => {
-  if (val == null || typeof val !== 'string') return null;
-  return val.replace(/^["'\s]+|["'\s\r\n]+$/g, '').replace(/\s+/g, '').trim() || null;
 };
 
 const getRazorpayKeyId = () => sanitizeEnv(process.env.RAZORPAY_ID_KEY);
@@ -480,6 +487,33 @@ const panelOrder = async (req, res) => {
     const user = await User.findById(userid);
     if (!user) return res.status(404).json({ success: false, msg: "User not found" });
 
+    if (!order_id || !payment_id) {
+      return res.status(400).json({ success: false, msg: "Payment details are required" });
+    }
+
+    if (!Array.isArray(orderItems) || orderItems.length === 0) {
+      return res.status(400).json({ success: false, msg: "Order items are required" });
+    }
+
+    if (!shippingAddress) {
+      return res.status(400).json({ success: false, msg: "Shipping address is required" });
+    }
+
+    const existingOrder = await Order.findOne({
+      $or: [
+        { order_id },
+        { payment_id }
+      ]
+    });
+
+    if (existingOrder) {
+      return res.json({
+        success: true,
+        msg: "Order already saved",
+        order: existingOrder
+      });
+    }
+
     const newOrder = new Order({
       user: userid,
       orderItems,
@@ -493,12 +527,26 @@ const panelOrder = async (req, res) => {
     await newOrder.save();
     await User.findByIdAndUpdate(userid, { $push: { orders: newOrder._id } });
 
-    await sendOrderEmail(user.email, { user, orderItems });
+    await Promise.all(orderItems.map(async (item) => {
+      if (item.productId && item.quantity) {
+        await Product.findByIdAndUpdate(item.productId, {
+          $inc: { numberOfPurchases: Number(item.quantity) || 1 }
+        });
+      }
+    }));
+
+    sendOrderEmail(user.email, { user, orderItems }).catch((emailError) => {
+      console.error("Order saved, but confirmation email failed:", emailError.message);
+    });
 
     res.json({ success: true, msg: "Order placed successfully", order: newOrder });
   } catch (error) {
     console.error("Error in panelOrder:", error);
-    res.status(500).send(error);
+    res.status(500).json({
+      success: false,
+      msg: "Failed to save order after payment",
+      error: error.message
+    });
   }
 };
 //cancel order
@@ -509,10 +557,28 @@ const cancelOrder = async (req, res) => {
   console.log(orderId);
 
   try {
+      if (!token) {
+          await getToken();
+      }
+      if (!token) {
+          return res.status(503).json({ message: 'Shiprocket is not configured' });
+      }
+
       // Fetch the order from the database
-      const order = await Order.findOne({ order_id: orderId });
+      const orderQuery = [{ order_id: orderId }];
+      if (mongoose.Types.ObjectId.isValid(orderId)) {
+          orderQuery.push({ _id: orderId });
+      }
+
+      const order = await Order.findOne({ $or: orderQuery });
       if (!order) {
           return res.status(404).json({ message: 'Order not found' });
+      }
+
+      const isAdmin = req.user?.role === 'admin';
+      const isOwner = order.user?.toString() === req.user?._id?.toString();
+      if (!isAdmin && !isOwner) {
+          return res.status(403).json({ message: 'Not authorized to cancel this order' });
       }
 
       // Prepare the data for the Shiprocket API request

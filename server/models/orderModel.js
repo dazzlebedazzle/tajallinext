@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const orderItemSchema = new mongoose.Schema({
     productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true
+        ref: 'Product'
     },
     productName: {
         type: String,
@@ -25,9 +24,7 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    slug: { type: String, 
-        unique: true,
-        required: true },
+    slug: { type: String },
 }, { _id: false });
 
 const shippingAddressSchema = new mongoose.Schema({
@@ -71,6 +68,10 @@ const orderSchema = new mongoose.Schema({
     },
     shiprocket_order_id: { // Added field for Shiprocket order ID
         type: String
+    },
+    total_pay: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

@@ -2,6 +2,8 @@ import Link from "next/link";
 import style from './BlogList.module.css'
 import Image from "next/image";
 
+export const dynamic = "force-dynamic";
+
 async function fetchAllBlogs() {
     const baseURL = "https://api.tajalli.co.in";
     try {

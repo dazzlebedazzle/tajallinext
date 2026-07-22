@@ -33,11 +33,6 @@ export const metadata = {
     icon: "/logo.png",  // Ensure you have a favicon.ico file in public folder
     apple: "/logo.png", // Optional for Apple devices
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   alternates: {
     canonical: "https://www.tajalli.co.in",
 },
@@ -48,9 +43,15 @@ export const metadata = {
 }
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable}`} suppressHydrationWarning>
       <AddBootstrap/>    
       <AuthProvider>

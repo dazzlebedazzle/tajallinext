@@ -1,33 +1,48 @@
 const axios = require('axios');
 
-const SHIPROCKET_API_URL = process.env.SHIPROCKET_API_URL;
+const sanitizeEnv = (val) => {
+  if (val == null || typeof val !== 'string') return null;
+  return val.replace(/^["'\s]+|["'\s\r\n]+$/g, '').replace(/\s+/g, '').trim() || null;
+};
+
+const SHIPROCKET_API_URL = sanitizeEnv(process.env.SHIPROCKET_API_URL || process.env.SHIPROCKET_API_URL2);
 const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
 const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
-const SHIPROCKET_API_URL2 = process.env.SHIPROCKET_API_URL2;
 
 let token = '';
 
 // Function to get Shiprocket token
 const getToken = async () => {
+  if (!SHIPROCKET_API_URL || !SHIPROCKET_EMAIL || !SHIPROCKET_PASSWORD) {
+    console.warn('Shiprocket credentials are incomplete; skipping token fetch');
+    return null;
+  }
+
   try {
     const response = await axios.post(`${SHIPROCKET_API_URL}/auth/login`, {
       email: SHIPROCKET_EMAIL,
       password: SHIPROCKET_PASSWORD,
     });
     token = response.data.token;
-    console.log('Token fetched successfully',token);
+    console.log('Token fetched successfully');
+    return token;
   } catch (error) {
-    console.error('Error fetching token:', error);
+    console.error('Error fetching Shiprocket token:', error.response ? error.response.data : error.message);
+    return null;
   }
 };
 
-// Fetch the token initially
-getToken();
+if (SHIPROCKET_API_URL && SHIPROCKET_EMAIL && SHIPROCKET_PASSWORD) {
+  getToken();
+}
 
 // Middleware to check and refresh token if necessary
 const checkToken = async (req, res, next) => {
   if (!token) {
     await getToken();
+  }
+  if (!token) {
+    return res.status(503).json({ message: 'Shiprocket is not configured' });
   }
   next();
 };

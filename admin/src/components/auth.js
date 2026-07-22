@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-   const [authLoading] = useState(true);
   const navigate = useNavigate();
   const initialAuthState = {
     isAuthenticated: false,
     user: null,
     token: null,
-    authLoading,
+    authLoading: true,
   };
   const [authState, setAuthState] = useState(initialAuthState);
 
@@ -56,11 +55,18 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: true,
         user: { id },
         token,
+        authLoading: false,
         
       });
     }
     else{
       alert("You are not an Authorized User");
+      setAuthState({
+        isAuthenticated: false,
+        user: null,
+        token: null,
+        authLoading: false,
+      });
     }
 
       navigate('/');
@@ -73,7 +79,12 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    setAuthState(initialAuthState);
+    setAuthState({
+      isAuthenticated: false,
+      user: null,
+      token: null,
+      authLoading: false,
+    });
     // triggerLogoutEvent();
     navigate('/login'); // Redirect to login page after logout
   };
@@ -98,7 +109,12 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    setAuthState(initialAuthState);
+    setAuthState({
+      isAuthenticated: false,
+      user: null,
+      token: null,
+      authLoading: false,
+    });
   };
 
   useEffect(() => {
@@ -111,11 +127,19 @@ export const AuthProvider = ({ children }) => {
           isAuthenticated: true,
           user,
           token,
+          authLoading: false,
         });
       } catch (error) {
         console.error('Error parsing user data:', error);
         handleLogout();
       }
+    } else {
+      setAuthState({
+        isAuthenticated: false,
+        user: null,
+        token: null,
+        authLoading: false,
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- handleLogout is stable, init only once
   }, []);

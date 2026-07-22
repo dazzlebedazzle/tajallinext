@@ -19,7 +19,7 @@ payment_route.post('/createOrder', createOrder);
 payment_route.post('/verify', verifyPayment);
 payment_route.post('/panelOrder',authMiddleware,panelOrder );
 
-payment_route.delete('/orders/:orderId/cancel', cancelOrder);
+payment_route.delete('/orders/:orderId/cancel', authMiddleware, cancelOrder);
 
 // module.exports=router;
 module.exports = payment_route;

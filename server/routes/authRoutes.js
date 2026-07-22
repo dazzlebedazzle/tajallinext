@@ -24,7 +24,7 @@ router.post("/applyReferral",authMiddleware,applyReferralDiscount)
 
 router.post("/register",createUser);
 router.post("/login",loginUser);
-router.get("/alluser",getAllUsers);
+router.get("/alluser",authMiddleware,admin,getAllUsers);
 router.put("/password",authMiddleware,updatePassword);
 router.post("/forgot-password-token",forgotPasswordToken);
 router.post("/reset-password/:token",resetPassword);
@@ -33,7 +33,7 @@ router.put('/edit-user-pro', authMiddleware, uploadPhoto.single('profileImage'),
 router.post("/refresh",handleRefreshToken);
 router.get("/getuser",authMiddleware,getUser);
 router.post("/logout",logout);
-router.delete("/:id",deleteUser);
+router.delete("/:id",authMiddleware,admin,deleteUser);
 router.put("/edit-user",authMiddleware,updateUser);
 router.put("/block-user/:id",authMiddleware,admin,blockUser);
 router.put("/unblock-user/:id",authMiddleware,admin,unblockUser);

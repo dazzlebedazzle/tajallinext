@@ -63,7 +63,7 @@ const Categories = () => {
         description: newCategoryDescription
       };
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/categories/${categories[editIndex]._id}`,
+        `${process.env.REACT_APP_API_URL}/api/categories/${categories[editIndex]._id}`,
         updatedCategory,
         {
           headers: {
