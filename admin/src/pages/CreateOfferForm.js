@@ -18,7 +18,7 @@ const CreateOfferForm = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('/api/product'); // adjust based on your API
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/allproduct`);
         setProducts(res.data);
       } catch (error) {
         console.error('Failed to load products:', error);
@@ -40,7 +40,7 @@ const CreateOfferForm = () => {
       const token = localStorage.getItem('token'); // or use context if available
 
       const res = await axios.post(
-        '/api/offer/offers',
+        `${process.env.REACT_APP_API_URL}/api/offer/offers`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -66,7 +66,7 @@ const CreateOfferForm = () => {
       const token = localStorage.getItem('token');
 
       await axios.put(
-        `/api/offer/${offerId}/image`,
+        `${process.env.REACT_APP_API_URL}/api/offer/${offerId}/image`,
         form,
         {
           headers: {
@@ -126,7 +126,7 @@ const CreateOfferForm = () => {
             <option value="">Select a product</option>
             {products.map((p) => (
               <option key={p._id} value={p._id}>
-                {p.name}
+                {p.title}
               </option>
             ))}
           </select>

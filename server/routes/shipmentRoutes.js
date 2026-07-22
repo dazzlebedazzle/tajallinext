@@ -1,6 +1,6 @@
 const express = require('express');
 const {  createShipment, trackShipment, cancelorder } = require('../controllers/shippingCtrl');
-const {checkToken}=require('../controllers/paymentCtrl');
+const {checkToken}=require('../controllers/shippingCtrl');
 const router = express.Router();
 
 // Apply checkToken middleware

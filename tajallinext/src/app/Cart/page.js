@@ -118,7 +118,9 @@ const Cart = ({ isOpen, onClose }) => {
           weight: item.weight,
           quantity: item.quantity,
           price: item.totalPrice * item.quantity,
+          slug: item.slug
         }));
+        setOrderDetails(orderDetails);
         router.push("/OrderConfirmation", { state: { orderDetails } }); // Use Next.js router
       } else {
         setError(response?.error || response?.message || "Invalid OTP. Please try again.");

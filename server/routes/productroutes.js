@@ -10,8 +10,8 @@ router.put("/update/:id",authMiddleware,admin,updateProduct);
 router.delete("/:id",authMiddleware,admin,deleteProduct);
 router.get("/allproduct",getAllProducts);
 router.get('/search', searchProducts);
-router.get("/:id",getProductById);
 router.get("/slug/:slug",getProductBySlug);
+router.get("/:id",getProductById);
 
 router.put("/wishlist",authMiddleware,addToWishlist);
 router.put("/ratings",authMiddleware,rating);

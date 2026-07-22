@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation';
 import Head from 'next/head';
 import Image from 'next/image';
 
-// Dynamically import Lottie to avoid SSR issues
 const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 
 const MyOrders = () => {
@@ -45,7 +44,7 @@ const MyOrders = () => {
             }
 
             const data = await response.json();
-            setOrders(data.orders);
+            setOrders(data.orders || []);
         } catch (error) {
             console.error('Error fetching orders:', error);
         }
@@ -106,46 +105,52 @@ const MyOrders = () => {
             <Head>
                 <link rel="canonical" href="https://www.tajalli.co.in/My-Order" />
             </Head>
-            
-         
+
             <div className="my-orders py-5">
                 <h1>My Orders</h1>
                 <div className="order-list">
                     {orders.length > 0 ? (
                         orders.map(order => (
-                            <div className="order-card" key={order.order_id}>
-                                <div className='order-card2 row py-3'>
-                                    {order.orderItems.map((orderItems) => { 
-                                        const filterurl = orderItems.productName.slice(0, orderItems.productName.indexOf("|")).trim().replace(/\s+/g, '-').replace(/[%|]/g, '');  
+                            <div className="order-card" key={order._id || order.order_id}>
+                                <div className="order-card-header">
+                                    <div>
+                                        <p className="order-label">Order ID</p>
+                                        <h2>{order.order_id || order._id}</h2>
+                                    </div>
+                                    <span className={`order-status ${order.orderStatus === 'Canceled' ? 'cancelled' : ''}`}>
+                                        {order.orderStatus}
+                                    </span>
+                                </div>
 
-                                        return (
-                                            <div className='block2 col-md-6 mb-3' key={orderItems.productId}>
-                                                <Link href={`/product/${orderItems.slug}`}>
-                                                    <Image 
-                                                        src={orderItems.productImg || '/default-image.png'} 
-                                                        alt="Product" 
-                                                        className="product-image" 
-                                                        width={200}
-                                                        height={200}
-                                                    />
+                                <div className='order-card2'>
+                                    {order.orderItems.map((orderItem, index) => (
+                                        <div className='block2' key={`${orderItem.productId || orderItem.slug || orderItem.productName}-${index}`}>
+                                            <Link href={`/product/${orderItem.slug || ''}`} className="product-image-link">
+                                                <Image
+                                                    src={orderItem.productImg || '/default-image.png'}
+                                                    alt={orderItem.productName || 'Product'}
+                                                    className="product-image"
+                                                    width={200}
+                                                    height={200}
+                                                />
+                                            </Link>
+                                            <div className='block1'>
+                                                <Link href={`/product/${orderItem.slug || ''}`}>
+                                                    <h3>{orderItem.productName}</h3>
                                                 </Link>
-                                                <div className='block1'>
-                                                    <Link href={`/product/${orderItems.slug}`}>
-                                                        <h2>{orderItems.productName}</h2>
-                                                    </Link>
-                                                    <div className='pnq'>
-                                                        <p><strong>Quantity:</strong> {orderItems.quantity}</p>
-                                                        <p><strong>Weight:</strong> {orderItems.weight}</p>
-                                                        <p><strong>Price:</strong> ₹{orderItems.price}</p>
-                                                    </div>
+                                                <div className='pnq'>
+                                                    <p><strong>Quantity</strong><span>{orderItem.quantity}</span></p>
+                                                    <p><strong>Weight</strong><span>{orderItem.weight}g</span></p>
+                                                    <p><strong>Price</strong><span>Rs{orderItem.price}</span></p>
                                                 </div>
                                             </div>
-                                        )
-                                    })}
+                                        </div>
+                                    ))}
                                 </div>
+
                                 <div className='order_buttons'>
                                     <button onClick={() => openModal(order)}>View Details</button>
-                                    <button onClick={() => openConfirmation(order.order_id)}>Cancel Order</button>
+                                    <button onClick={() => openConfirmation(order.order_id || order._id)}>Cancel Order</button>
                                 </div>
                             </div>
                         ))
@@ -159,7 +164,7 @@ const MyOrders = () => {
                     )}
                 </div>
             </div>
-            
+
             {selectedOrder && (
                 <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -167,14 +172,13 @@ const MyOrders = () => {
                     </div>
                 </div>
             )}
-            
+
             <ConfirmationModal
                 isOpen={isConfirmationOpen}
                 onClose={closeConfirmation}
                 onConfirm={confirmCancelOrder}
                 message="Are you sure you want to cancel this order?"
             />
-            
         </div>
     );
 };
