@@ -46,12 +46,12 @@ const Footer = () => {
               </Link>
               <Link
               target="blank"
-                href="https://www.instagram.com/tajallidryfruits/"
+                href="https://www.instagram.com/tajalliofficial/"
                 aria-label="instagram account"
               >
                 <FaInstagram />
               </Link>
-              <Link target="blank" href="#" aria-label="Linkedin account">
+              <Link target="blank" href="https://www.linkedin.com/in/tajalli-product-71a740305/" aria-label="Linkedin account">
                 <FaLinkedinIn />
               </Link>
             </div>
