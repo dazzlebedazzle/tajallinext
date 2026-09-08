@@ -345,7 +345,7 @@ export const metaData1= [
       },
       "sameAs": [
         "https://tajalli.co.in/static/media/logo.8aa79b666013132e9a8e.png",
-        "https://www.instagram.com/tajallidryfruits",
+        "https://www.instagram.com/tajalliofficial",
         "https://x.com/TajalliProduct"
       ]
     },

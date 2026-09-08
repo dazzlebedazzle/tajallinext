@@ -1,31 +1,19 @@
 // src/Component/InfoSection.js
 
 import React from 'react';
-import { FaShippingFast, FaMoneyCheckAlt, FaCheckCircle, FaTrophy } from 'react-icons/fa';
 import Image from 'next/image';
 import './Feature.css';
-import shippingIcon from '../../../public/assets/Cash_on_delivery.gif'
-import payIcon from '../../../public/assets/Pay_on_delivery.gif'
-import qualityIcon from '../../../public/assets/100_quality.gif'
-import rewardIcon from '../../../public/assets/Award.gif'
-
+import quality from '../../../public/assets/100_quality.gif';
+import award from '../../../public/assets/Award.gif';
 
 const InfoSection = () => {
   const infoItems = [
     {
-      icon: shippingIcon,
-      text: 'Free Shipping On Orders Above ₹3000'
-    },
-    {
-      icon: payIcon,
-      text: 'Pay On Delivery'
-    },
-    {
-      icon: qualityIcon,
+      icon: quality,
       text: '100% Quality Guaranteed'
     },
     {
-      icon: rewardIcon,
+      icon: award,
       text: 'Reward Points On Every Purchase'
     }
   ];
@@ -39,6 +27,7 @@ const InfoSection = () => {
           <React.Fragment key={index}>
             <div className="info-item">
               <div className="info-icon"><Image src={item.icon} alt='feature icons'  width="600" height="400" 
+              unoptimized
               priority={false}
               quality={20} 
               ></Image>
