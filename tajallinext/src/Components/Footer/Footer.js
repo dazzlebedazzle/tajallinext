@@ -46,7 +46,7 @@ const Footer = () => {
               </Link>
               <Link
               target="blank"
-                href="https://www.instagram.com/tajalliofficial/"
+                href="https://www.instagram.com/tajalliofficials/"
                 aria-label="instagram account"
               >
                 <FaInstagram />
