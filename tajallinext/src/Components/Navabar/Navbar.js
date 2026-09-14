@@ -31,7 +31,7 @@ const Navbar = () => {
   const navbarRef = useRef(null);
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   // const navigate = useNavigate();
-  const { authState , logout } = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
   const [profileImage, setProfileImage] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // New state for scroll
@@ -70,7 +70,8 @@ const Navbar = () => {
       const token = localStorage.getItem('token'); // or use context if stored there
 
       if (!token) {
-        alert('Authentication token not found. Please log in again.');
+        localStorage.removeItem('user');
+        localStorage.removeItem('profileImage');
         return;
       }
 
@@ -82,7 +83,11 @@ const Navbar = () => {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/user/getuser`, config); // Change the endpoint to match your backend
       setProfileImage(response.data.profileImage || '/default-profile.png');
     } catch (err) {
-      console.error('Error fetching user details:', err);
+      console.warn('User session expired. Please log in again.');
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('profileImage');
+      setProfileImage(null);
     }
   };
 

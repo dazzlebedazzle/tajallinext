@@ -11,20 +11,27 @@ export const dynamic = "force-dynamic"; // ✅ Add this at the top
 
 // Fetch a single blog based on slug
 async function fetchBlog(slug) {
-    const baseURL = "https://api.tajalli.co.in";
-    try {
-        const response = await axios.get(`${baseURL}/api/blogs/getBlogSlug/${slug}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching blog data:", error);
-        return null;
+    const apiURLs = [
+        (process.env.NEXT_PUBLIC_API_URL || "").trim(),
+        "http://localhost:5000",
+    ].filter(Boolean);
+
+    for (const baseURL of [...new Set(apiURLs)]) {
+        try {
+            const response = await axios.get(`${baseURL}/api/blogs/getBlogSlug/${encodeURIComponent(slug)}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching blog data from ${baseURL}:`, error?.response?.status || error.message);
+        }
     }
+
+    return null;
 }
 
 // Dynamic Metadata
 export async function generateMetadata({ params }) {
-    const blog = await fetchBlog(params.slug);
-    console.log(params)
+    const { slug } = await params;
+    const blog = await fetchBlog(slug);
 
     if (!blog) {
         return {
@@ -40,7 +47,7 @@ export async function generateMetadata({ params }) {
             title: blog.title,
             description: blog.desc,
             images: [{ url: blog.image }],
-            url: `https://www.tajalli.co.in/blogs/${params.slug}`,
+            url: `https://www.tajalli.co.in/blogs/${slug}`,
         },
         twitter: {
             card: "summary_large_image",
@@ -53,7 +60,8 @@ export async function generateMetadata({ params }) {
 
 // Blog Detail Page
 const BlogPage = async ({ params }) => {
-    const blog = await fetchBlog(params.slug);
+    const { slug } = await params;
+    const blog = await fetchBlog(slug);
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, "0");
@@ -62,6 +70,19 @@ const BlogPage = async ({ params }) => {
         return `${day}-${month}-${year}`;
       };
 
+    if (!blog) {
+        return (
+            <section className="container py-5">
+                <div className="border rounded p-4 my-3 text-center">
+                    <h1>Blog Not Found</h1>
+                    <p>The requested blog could not be found. Please try again later.</p>
+                    <Link href="/" className="btn btn-primary mt-3">
+                        Back to Home
+                    </Link>
+                </div>
+            </section>
+        );
+    }
 
     const schemaData = {
         "@context": "https://schema.org",
@@ -87,20 +108,6 @@ const BlogPage = async ({ params }) => {
         },
         "datePublished": formatDate(blog.createdAt)
       };
-
-    if (!blog) {
-        return (
-            <section className="container py-5">
-                <div className="border rounded p-4 my-3 text-center">
-                    <h1>Blog Not Found</h1>
-                    <p>The requested blog could not be found. Please try again later.</p>
-                    <Link href="/" className="btn btn-primary mt-3">
-                        Back to Home
-                    </Link>
-                </div>
-            </section>
-        );
-    }
 
     return (
             <>
