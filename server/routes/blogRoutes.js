@@ -12,5 +12,6 @@ router.get("/getBlogSlug/:slug", getBlogBySlug);
 router.put("/updateBlog/:id", authMiddleware, updateBlog);
 router.delete("/deleteBlog/:id", authMiddleware, deleteBlog);
 router.get("/getBlogTag/:tag",getBlogsByTag)
+router.get("/:slug", getBlogBySlug);
 
 module.exports = router;

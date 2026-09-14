@@ -1,5 +1,6 @@
 const Blog = require("../models/blogModel");
 const slugify = require("slugify");
+const mongoose = require("mongoose");
 const cloudinaryuploadImg = require("../utils/cloudinary");
 
 // Create a new blog post
@@ -65,7 +66,11 @@ const getBlogById = async (req, res) => {
 const getBlogBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    const post = await Blog.findOne({ slug: slug });
+    const normalizedSlug = slugify(decodeURIComponent(slug), { lower: true, strict: true });
+    const query = mongoose.Types.ObjectId.isValid(slug)
+      ? { _id: slug }
+      : { $or: [{ slug }, { slug: normalizedSlug }] };
+    const post = await Blog.findOne(query);
     if (!post) return res.status(404).json({ message: "Blog post not found" });
     res.status(200).json(post);
   } catch (error) {
