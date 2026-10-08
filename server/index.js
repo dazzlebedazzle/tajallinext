@@ -32,7 +32,7 @@ const corsOptions = {
     'http://localhost:3000',
     'http://localhost:4001',
     'http://localhost:5000',
-       'https://hoppscotch.io',
+    'https://hoppscotch.io',
 
     // Tajalli main domains
     'http://tajalli.co.in',
@@ -51,6 +51,7 @@ const corsOptions = {
     'http://admin.tajalli.in',
     'https://admin.tajalli.in',
 
+    
     // Direct IP (if really needed)
     'http://72.60.202.5:4000'
   ],
