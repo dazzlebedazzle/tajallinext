@@ -12,6 +12,9 @@ import Loader from '@/Components/Loader/Loader';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { FaEdit } from 'react-icons/fa';
 
+const DEFAULT_COUPON_CODE = 'FESTIVEDEAL';
+const formatPrice = (value) => Number(value || 0).toFixed(2);
+
 const OrderConfirmation = () => {
     const orderDetail = useOrder();
     const { updateOrderState } = useOrder();
@@ -55,6 +58,8 @@ const OrderConfirmation = () => {
     });
 
     const [couponDiscount, setCouponDiscount] = useState(0);
+    const [couponMessage, setCouponMessage] = useState('');
+    const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
     const [referralDiscount, setReferralDiscount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -109,28 +114,45 @@ const OrderConfirmation = () => {
 
     // Function to apply coupon
     const applyCoupon = async (code) => {
-        if (!code) return;
-        
+        const normalizedCode = (code || '').trim().toUpperCase();
+        const subtotal = shippingDetails.sub_total || initialSubTotal;
+
+        if (!normalizedCode) {
+            setCouponMessage('Please enter a coupon code.');
+            return;
+        }
+
+        if (!subtotal) {
+            setCouponMessage('Add products before applying a coupon.');
+            return;
+        }
+
+        setIsApplyingCoupon(true);
+        setCouponMessage('');
+
         try {
-            console.log('Applying coupon:', code);
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/coupon/use`, {
-                price: shippingDetails.sub_total,
-                couponName: code
+                price: subtotal,
+                couponName: normalizedCode
             });
 
             if (response.status === 200 && response.data.discountedPrice !== undefined) {
-                const discount = shippingDetails.sub_total - response.data.discountedPrice;
+                const discount = subtotal - response.data.discountedPrice;
                 setCouponDiscount(discount);
-                setCouponCode(code);
+                setCouponCode(normalizedCode);
                 setReferralDiscount(0);
                 setUseReferral(false);
                 setTotalPay(response.data.discountedPrice);
-                console.log('Coupon applied successfully');
+                setCouponMessage(`Coupon ${normalizedCode} applied successfully.`);
             } else {
-                console.error('Failed to apply coupon:', response.data.message);
+                setCouponDiscount(0);
+                setCouponMessage(response.data?.message || 'Unable to apply this coupon.');
             }
         } catch (error) {
-            console.error('Error applying coupon:', error.message);
+            setCouponDiscount(0);
+            setCouponMessage(error?.response?.data?.message || error?.response?.data?.error || 'Invalid or expired coupon code.');
+        } finally {
+            setIsApplyingCoupon(false);
         }
     };
 
@@ -139,6 +161,12 @@ const OrderConfirmation = () => {
         if (orderDetails && orderDetails.length > 0) {
             const initialTotal = orderDetails.reduce((acc, product) => acc + product.price, 0);
             setTotalPay(initialTotal);
+            setShippingDetails(prevDetails => ({
+                ...prevDetails,
+                sub_total: initialTotal,
+                weight: orderDetails.reduce((acc, product) => acc + (Number(product.weight) || 0) * (Number(product.quantity) || 1), 0),
+                productId: orderDetails.map(product => product.productId).filter(Boolean)
+            }));
             // If orderDetails are loaded and no token (guest user), hide loader
             if (!token) {
                 setIsLoading(false);
@@ -150,39 +178,33 @@ const OrderConfirmation = () => {
         }
     }, [orderDetails, token]);
 
-    // Check for coupon in localStorage on component mount
+    // Check for coupon in URL/localStorage once the subtotal is ready.
     useEffect(() => {
-        const checkAndApplyCoupon = () => {
-            const tempCouponDetails = localStorage.getItem('tempCouponDetails');
-            console.log('Checking localStorage for coupon:', tempCouponDetails);
-            
-            if (tempCouponDetails) {
-                try {
-                    const { coupon, autoApply } = JSON.parse(tempCouponDetails);
-                    console.log('Found coupon details:', { coupon, autoApply });
-                    
-                    if (coupon && autoApply) {
-                        setCouponCode(coupon);
-                        // Small delay to ensure shipping details are initialized
-                        setTimeout(() => {
-                            applyCoupon(coupon);
-                        }, 100);
-                    }
-                    // Clean up localStorage
-                    localStorage.removeItem('tempCouponDetails');
-                } catch (error) {
-                    console.error('Error parsing coupon details:', error);
-                }
+        if (!shippingDetails.sub_total) return;
+
+        let couponToApply = couponFromUrl || '';
+        let shouldAutoApply = Boolean(couponFromUrl && autoApply);
+        const tempCouponDetails = localStorage.getItem('tempCouponDetails');
+
+        if (tempCouponDetails) {
+            try {
+                const couponDetails = JSON.parse(tempCouponDetails);
+                couponToApply = couponDetails.coupon || couponToApply;
+                shouldAutoApply = Boolean(couponDetails.autoApply);
+            } catch (error) {
+                console.error('Error parsing coupon details:', error);
+            } finally {
+                localStorage.removeItem('tempCouponDetails');
             }
-        };
+        }
 
-        // Initial check
-        checkAndApplyCoupon();
+        if (!couponToApply) return;
 
-        // Also check after a short delay to ensure all state is initialized
-        const timer = setTimeout(checkAndApplyCoupon, 500);
-        return () => clearTimeout(timer);
-    }, []);
+        setCouponCode(couponToApply.toUpperCase());
+        if (shouldAutoApply) {
+            applyCoupon(couponToApply);
+        }
+    }, [shippingDetails.sub_total, couponFromUrl, autoApply]);
 
     const handleApplyCoupon = () => {
         applyCoupon(couponCode);
@@ -333,7 +355,7 @@ const OrderConfirmation = () => {
         return (
             <div className="total-payable">
                 <h3>Total Payable Amount</h3>
-                <p>₹{totalPayable}</p>
+                <p>₹{formatPrice(totalPayable)}</p>
             </div>
         );
     };
@@ -364,9 +386,9 @@ const OrderConfirmation = () => {
                             <div className="product-info">
                                 <h3>{product.title}</h3>
                                 <p>Weight: {product.weight}g</p>
-                                <p>Price: ₹{product.price / product.quantity}</p>
+                                <p>Price: ₹{formatPrice(product.price / product.quantity)}</p>
                                 <p>Quantity: {product.quantity}</p>
-                                <p>Subtotal: ₹{product.price}</p>
+                                <p>Subtotal: ₹{formatPrice(product.price)}</p>
                             </div>
                         </div>
                     ))}
@@ -584,35 +606,47 @@ const OrderConfirmation = () => {
                     <div className='totalprice'>
                         <div className='p1'>
                             <p>Subtotal</p>
-                            <p> ₹{shippingDetails.sub_total}/-</p>
+                            <p> ₹{formatPrice(shippingDetails.sub_total)}/-</p>
                         </div>
                         <div className='p2'>
                             <p>Delivery Charges</p>
-                            <p>₹{deliveryChargeState}/-</p>
+                            <p>₹{formatPrice(deliveryChargeState)}/-</p>
                         </div>
                         <hr></hr>
                         <div className='totalorder'>
                             <p>Total Price </p>
-                            <p>₹{shippingDetails.sub_total + deliveryChargeState}/-</p>
+                            <p>₹{formatPrice(shippingDetails.sub_total + deliveryChargeState)}/-</p>
                         </div>
                         <hr></hr>
                         <div className="coupon-code">
                             <h3>Have a coupon?</h3>
+                            <button
+                                type="button"
+                                className="featured-coupon"
+                                onClick={() => setCouponCode(DEFAULT_COUPON_CODE)}
+                            >
+                                Use code {DEFAULT_COUPON_CODE} for up to 27% off
+                            </button>
                             <div className='coupon_class'>
                                 <input
                                     type="text"
                                     placeholder="Enter coupon code"
                                     value={couponCode}
-                                    onChange={(e) => setCouponCode(e.target.value)}
+                                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                 />
-                                <button type="button" onClick={handleApplyCoupon}>
-                                    Apply Coupon
+                                <button type="button" onClick={handleApplyCoupon} disabled={isApplyingCoupon}>
+                                    {isApplyingCoupon ? 'Applying...' : 'Apply Coupon'}
                                 </button>
                             </div>
+                            {couponMessage && (
+                                <p className={couponDiscount > 0 ? 'coupon-message success' : 'coupon-message error'}>
+                                    {couponMessage}
+                                </p>
+                            )}
                         </div>
                         {couponDiscount > 0 && (
                             <h2 className='saved'>
-                                Congratulation! You saved <span>₹{couponDiscount}/-</span> by <span>{couponCode}</span> coupon
+                                Congratulation! You saved <span>₹{formatPrice(couponDiscount)}/-</span> by <span>{couponCode}</span> coupon
                             </h2>
                         )}
                         <hr></hr>
@@ -631,12 +665,12 @@ const OrderConfirmation = () => {
                         )}
                         {referralDiscount > 0 && (
                             <h2 className='saved'>
-                                100 Referral Point Used. You Save! <span>₹{referralDiscount}/-</span> 
+                                100 Referral Point Used. You Save! <span>₹{formatPrice(referralDiscount)}/-</span> 
                             </h2>
                         )}
                         <div className='totalorder'>
                             <p className='h5'>Total Price after discount</p>
-                            <p className='h5 text-success fw-bold'>₹{totalPayable}/-</p>
+                            <p className='h5 text-success fw-bold'>₹{formatPrice(totalPayable)}/-</p>
                         </div>
                     </div>
                 </div>
