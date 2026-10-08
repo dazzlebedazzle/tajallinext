@@ -7,21 +7,18 @@ import './Slider.css';
 
 const bannerSlides = [
   {
-    src: '/assets/tj1.jpeg',
+    src: '/assets/tj01.jpeg',
     alt: 'Tajalli festive season nutritious deals gift combo banner',
   },
   {
-    src: '/assets/tj2.jpeg',
+    src: '/assets/tj02.jpeg',
     alt: 'Tajalli festive season dry fruits deal banner',
   },
   {
-    src: '/assets/tj3.jpeg',
+    src: '/assets/tj03.jpeg',
     alt: 'Tajalli festive season nutritious deals banner',
   },
-  {
-    src: '/assets/tj4.jpeg',
-    alt: 'Tajalli festive premium gift combos banner',
-  },
+
 ];
 
 const SimpleSlider = () => {
