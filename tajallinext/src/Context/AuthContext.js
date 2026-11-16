@@ -92,14 +92,16 @@ export const AuthProvider = ({ children }) => {
     router.push('/');
   };
 
+  // Clears an expired/invalid session without navigating away
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('profileImage');
     setAuthState(initialAuthState);
   };
 
   return (
-    <AuthContext.Provider value={{ authState, login, logout, verifOtp }}>
+    <AuthContext.Provider value={{ authState, login, logout, verifOtp, clearSession: handleLogout }}>
       {children}
     </AuthContext.Provider>
   );

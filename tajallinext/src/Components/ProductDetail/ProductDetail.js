@@ -11,6 +11,8 @@ import axios from "axios";
 import { useOrder } from "@/Context/OrderContext";
 import Loader from "../Loader/Loader";
 import cartGif from '../../../public/assets/Addtocart.gif';
+import WeightSelector from '../WeightSelector/WeightSelector';
+import { formatWeight, priceForWeight } from '@/utils/weight';
 
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
@@ -34,7 +36,7 @@ const ProductDetail = ({ slug }) => {
         const res = await fetch(`${baseURL}/api/product/slug/${slug}`);
         const data = await res.json();
         setProduct(data);
-        setSelectedWeight(data.weights?.[0]);
+        setSelectedWeight(Number(data.weights?.[0]));
         setSelectedImage(data.images?.[0]);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -80,13 +82,6 @@ const ProductDetail = ({ slug }) => {
     setPage(prevPage => prevPage + 1);
   };
 
-  const handleWeightChange = (event) => {
-    const weight = parseInt(event.target.value, 10);
-    if (!isNaN(weight)) {
-      setSelectedWeight(weight);
-    }
-  };
-
   const handleQuantityChange = (event) => {
     setSelectedQuantity(parseInt(event.target.value, 10));
   };
@@ -95,17 +90,10 @@ const ProductDetail = ({ slug }) => {
 
   const closePopup = () => setPopupType(null);
 
-  const calculatedPrice = Math.round(product.price * selectedWeight / 1000);
+  const calculatedPrice = priceForWeight(product.price, selectedWeight);
   const cartItemId = `${slug}${selectedWeight}`;
 
-  const handleAddToCart = () => {
-    const token = localStorage.getItem('token');
-
-    // if (!token) {
-    //   setPopupType('login');
-    //   return;
-    // }
-
+  const handleAddToCart = async () => {
     const orderDetails = {
       cartId: cartItemId,
       productId: product._id,
@@ -116,10 +104,16 @@ const ProductDetail = ({ slug }) => {
       price: calculatedPrice,
       totalPrice: calculatedPrice,
       quantity: selectedQuantity,
-      slug:product.slug
+      slug:product.slug,
+      pricePerKg: product.price,
+      weightOptions: product.weights
     };
     
-    addToCart(orderDetails);
+    const added = await addToCart(orderDetails);
+    if (!added) {
+      alert('Could not add this item to your cart. Please try again.');
+      return;
+    }
     setPopupType('success');
     setTimeout(() => setPopupType(null), 2000);
   };
@@ -191,16 +185,21 @@ const ProductDetail = ({ slug }) => {
 
         <div className="product-info">
           <h1>{product.title}</h1>
-          <p className="price my-4"><del className='me-2'>₹{Math.floor(calculatedPrice*(10/8))}/-</del>₹{calculatedPrice}/-</p>
-          
-          <div className="d-flex gap-3 my-2">
-            <div className="weight-selection">
-              <p>SIZE</p>
-              <select value={selectedWeight} onChange={handleWeightChange}>
-                {product.weights.map((weight, index) => (
-                  <option key={index} value={weight}>{weight}g</option>
-                ))}
-              </select>
+          <p className="price mt-4 mb-1"><del className='me-2'>₹{Math.floor(calculatedPrice*(10/8)) * selectedQuantity}/-</del>₹{calculatedPrice * selectedQuantity}/-</p>
+          <p className="price-per-unit mb-4">
+            {selectedQuantity > 1
+              ? `₹${calculatedPrice} × ${selectedQuantity} packs of ${formatWeight(selectedWeight)} · ₹${product.price} per kg`
+              : `₹${product.price} per kg · ${formatWeight(selectedWeight)} selected`}
+          </p>
+
+          <div className="d-flex flex-wrap gap-3 my-2">
+            <div className="weight-selection weight-selection--custom">
+              <p>WEIGHT</p>
+              <WeightSelector
+                value={selectedWeight}
+                onChange={setSelectedWeight}
+                weights={product.weights}
+              />
             </div>
             <div className="quantity-selection">
               <p>Select Quantity:</p>

@@ -31,7 +31,7 @@ const Navbar = () => {
   const navbarRef = useRef(null);
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   // const navigate = useNavigate();
-  const { authState } = useContext(AuthContext);
+  const { authState, clearSession } = useContext(AuthContext);
   const [profileImage, setProfileImage] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // New state for scroll
@@ -84,9 +84,7 @@ const Navbar = () => {
       setProfileImage(response.data.profileImage || '/default-profile.png');
     } catch (err) {
       console.warn('User session expired. Please log in again.');
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      localStorage.removeItem('profileImage');
+      clearSession(); // also resets authState so the cart stops using the stale token
       setProfileImage(null);
     }
   };

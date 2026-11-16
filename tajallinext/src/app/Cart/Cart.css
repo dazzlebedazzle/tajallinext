@@ -170,6 +170,7 @@ border: none;
   top: 0;
   width: 400px;
   height: 100vh;
+  height: 100dvh; /* visible viewport on mobile, excludes browser toolbars */
   background: white;
   box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
   transition: right 0.3s ease-in-out;
@@ -232,10 +233,9 @@ border: none;
 .cart-content {
   flex: 1;
   padding: 15px;
+  min-height: 0; /* lets the list scroll instead of pushing the footer off-screen */
   overflow-y: auto;
   position: relative;
-  margin-bottom: 70px;
-  max-height: 80vh;
 }
 
 .milestone {
@@ -390,8 +390,8 @@ border: none;
 }
 .cart-footer {
   padding: 15px 20px;
-  position: absolute;
-  bottom: 0;
+  padding-bottom: calc(15px + env(safe-area-inset-bottom));
+  flex-shrink: 0; /* always visible at the bottom of the drawer */
   display: flex;
   width: 100%;
   border-top: 1px solid #e5e5e5;
@@ -487,6 +487,7 @@ border: none;
 
   .cart-footer {
     padding: 12px 15px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
     flex-direction: column;
     gap: 10px;
   }
@@ -562,3 +563,20 @@ border: none;
   }
 }
 
+
+/* Change weight in place (500 g -> 1 kg) */
+.cart-item-weight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 6px;
+}
+.cart-item-weight > span {
+  font-size: 12px;
+  color: #7a6a5c;
+}
+.cart-item-each {
+  display: block;
+  font-size: 11px;
+  color: #7a6a5c;
+}

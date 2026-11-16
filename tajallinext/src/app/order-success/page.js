@@ -6,6 +6,7 @@ import './OrderSuccessPage.css';
 import { useOrder } from '@/Context/OrderContext';
 import Image from 'next/image';
 import Loader from '@/Components/Loader/Loader';
+import { formatWeight } from '@/utils/weight';
 
 const OrderSuccessPage = () => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const OrderSuccessPage = () => {
                     <Image width={500} height={500} src={product.productImg} alt={product.title} className="product-image" />
                     <div className="product-info">
                       <h3 className="product-title">{product.title}</h3>
-                      <p className="product-weight">Weight: {product.weight}g</p>
+                      <p className="product-weight">Weight: {formatWeight(product.weight)}</p>
                       <p className="product-price">Price: ₹{product.price}</p>
                       <p className="product-quantity">Quantity: {product.quantity}</p>
                       <p className="product-subtotal">Subtotal: ₹{product.price * product.quantity}</p>

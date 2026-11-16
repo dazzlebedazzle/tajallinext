@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Loader from '@/Components/Loader/Loader';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { FaEdit } from 'react-icons/fa';
+import { formatWeight } from '@/utils/weight';
 
 const DEFAULT_COUPON_CODE = 'FESTIVEDEAL';
 const formatPrice = (value) => Number(value || 0).toFixed(2);
@@ -385,7 +386,7 @@ const OrderConfirmation = () => {
                             <Image width={500} height={500} src={product.productImg} alt={product.title} />
                             <div className="product-info">
                                 <h3>{product.title}</h3>
-                                <p>Weight: {product.weight}g</p>
+                                <p>Weight: {formatWeight(product.weight)}</p>
                                 <p>Price: ₹{formatPrice(product.price / product.quantity)}</p>
                                 <p>Quantity: {product.quantity}</p>
                                 <p>Subtotal: ₹{formatPrice(product.price)}</p>

@@ -3,8 +3,17 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import { priceForWeight } from '@/utils/weight';
 
 const CartContext = createContext();
+
+// API returns weights as strings ("250") while <select> handlers produce numbers
+const sameWeight = (a, b) => Number(a) === Number(b);
+
+// Backend answers an expired/invalid JWT with "Not authorized, token failed" (HTTP 401 or 500)
+const isAuthError = (error) =>
+  error?.response?.status === 401 ||
+  /not authorized/i.test(error?.response?.data?.message || '');
 
 const cartReducer = (state = [], action) => {
   switch (action.type) {
@@ -13,7 +22,7 @@ const cartReducer = (state = [], action) => {
     case 'ADD_TO_CART':
       const existingItemIndex = state.findIndex(item =>
         item.productId === action.payload.productId &&
-        item.weight === action.payload.weight
+        sameWeight(item.weight, action.payload.weight)
       );
       if (existingItemIndex !== -1) {
         const newState = [...state];
@@ -25,11 +34,11 @@ const cartReducer = (state = [], action) => {
     case 'REMOVE_FROM_CART':
       return state.filter(item =>
         !(item.productId === action.payload.productId &&
-        item.weight === action.payload.weight));
+        sameWeight(item.weight, action.payload.weight)));
     case 'UPDATE_QUANTITY': {
       const { productId, weight, quantity } = action.payload;
       return state.map(item => {
-        if (item.productId === productId && item.weight === weight) {
+        if (item.productId === productId && sameWeight(item.weight, weight)) {
           return { ...item, quantity };
         }
         return item;
@@ -44,7 +53,7 @@ const cartReducer = (state = [], action) => {
 
 export const CartProvider = ({ children }) => {
   const [cart, dispatch] = useReducer(cartReducer, []);
-  const { authState } = useAuth();
+  const { authState, clearSession } = useAuth();
 
   useEffect(() => {
 
@@ -62,6 +71,7 @@ export const CartProvider = ({ children }) => {
           dispatch({ type: 'SET_CART', payload: data });
         } catch (error) {
           console.error('Failed to fetch cart', error);
+          if (isAuthError(error)) clearSession();
         }
       }
       else {
@@ -88,43 +98,59 @@ export const CartProvider = ({ children }) => {
   //   }
   // };
 
-  const addToCart = async (product) => {
-    if (!authState.isAuthenticated) {
-      // For guest users, store cart items in localStorage
-      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-      
-      // Check if the product with the same weight already exists in cart
-      const existingItemIndex = currentCart.findIndex(
-        (item) => item.productId === product.productId && item.weight === product.weight
-      );
-  
-      if (existingItemIndex !== -1) {
-        // If item exists, update the quantity
-        currentCart[existingItemIndex].quantity += product.quantity;
-      } else {
-        // If item does not exist, add to cart
-        currentCart.push(product);
-      }
-  
-      localStorage.setItem("cart", JSON.stringify(currentCart));
-      dispatch({ type: "SET_CART", payload: currentCart });
+  const addToGuestCart = (product) => {
+    // For guest users, store cart items in localStorage
+    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Check if the product with the same weight already exists in cart
+    const existingItemIndex = currentCart.findIndex(
+      (item) => item.productId === product.productId && sameWeight(item.weight, product.weight)
+    );
+
+    if (existingItemIndex !== -1) {
+      // If item exists, update the quantity
+      currentCart[existingItemIndex].quantity += product.quantity;
     } else {
-      // For logged-in users, send API request to update cart on server
-      try {
-        const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/user/cart/add`,
-          product,
-          {
-            headers: {
-              Authorization: `Bearer ${authState.token}`,
-            },
-          }
-        );
-        console.log(product,"cartdat")
-        dispatch({ type: "SET_CART", payload: data });
-      } catch (error) {
-        console.error("Failed to add to cart", error);
+      // If item does not exist, add to cart
+      currentCart.push(product);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(currentCart));
+    dispatch({ type: "SET_CART", payload: currentCart });
+  };
+
+  // Returns true when the item was added, so callers only show "added" on success
+  const addToCart = async (rawProduct) => {
+    const product = { ...rawProduct, weight: Number(rawProduct.weight) };
+
+    if (!authState.isAuthenticated) {
+      addToGuestCart(product);
+      return true;
+    }
+
+    // For logged-in users, send API request to update cart on server
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/cart/add`,
+        product,
+        {
+          headers: {
+            Authorization: `Bearer ${authState.token}`,
+          },
+        }
+      );
+      dispatch({ type: "SET_CART", payload: Array.isArray(data) ? data : [] });
+      return true;
+    } catch (error) {
+      if (isAuthError(error)) {
+        // Session expired: keep the item in the guest cart and drop the stale login.
+        // It is merged into the server cart on the next login.
+        addToGuestCart(product);
+        clearSession();
+        return true;
       }
+      console.error("Failed to add to cart", error);
+      return false;
     }
   };
   
@@ -216,6 +242,7 @@ useEffect(() => {
 
     } catch (error) {
       console.error("Cart sync error:", error);
+      if (isAuthError(error)) clearSession();
       // Don't throw error, just log it - cart merge is not critical
       // User can still proceed with their cart
     }
@@ -245,7 +272,7 @@ useEffect(() => {
       
       // Filter out the item to be removed
       currentCart = currentCart.filter(
-        (item) => !(item.productId === productId && item.weight === weight)
+        (item) => !(item.productId === productId && sameWeight(item.weight, weight))
       );
   
       // Update localStorage and context state
@@ -260,6 +287,7 @@ useEffect(() => {
         dispatch({ type: "REMOVE_FROM_CART", payload: { productId, weight } });
       } catch (error) {
         console.error("Failed to remove from cart", error);
+        if (isAuthError(error)) clearSession();
       }
     }
   };
@@ -271,7 +299,7 @@ useEffect(() => {
       let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
       
       // Find the index of the item to be updated
-      const itemIndex = currentCart.findIndex(item => item.productId === productId && item.weight === weight);
+      const itemIndex = currentCart.findIndex(item => item.productId === productId && sameWeight(item.weight, weight));
   
       if (itemIndex !== -1) {
         // Update the item's quantity if found
@@ -291,10 +319,59 @@ useEffect(() => {
             Authorization: `Bearer ${authState.token}`,
           },
         });
-        dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, weight, quantity } });
+        if (Array.isArray(data)) dispatch({ type: 'SET_CART', payload: data });
+        else dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, weight, quantity } });
       } catch (error) {
         console.error('Failed to update cart quantity', error);
+        if (isAuthError(error)) clearSession();
       }
+    }
+  };
+
+  // Change the weight of an existing cart line (e.g. 500 g -> 1 kg) instead of adding another line.
+  // If the cart already has this product at the new weight, the two lines are merged.
+  // Returns true on success.
+  const changeWeight = async (productId, weight, rawNewWeight) => {
+    const newWeight = Number(rawNewWeight);
+    if (!Number.isFinite(newWeight) || newWeight <= 0 || sameWeight(weight, newWeight)) return false;
+
+    if (!authState.isAuthenticated) {
+      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const line = currentCart.find(item => item.productId === productId && sameWeight(item.weight, weight));
+      if (!line) return false;
+
+      // Older guest lines don't carry pricePerKg: derive it from the stored pack price
+      const pricePerKg = Number(line.pricePerKg) || (Number(line.totalPrice) * 1000) / Number(line.weight);
+      const target = currentCart.find(item => item.productId === productId && sameWeight(item.weight, newWeight));
+
+      let nextCart;
+      if (target) {
+        target.quantity += line.quantity;
+        nextCart = currentCart.filter(item => item !== line);
+      } else {
+        line.weight = newWeight;
+        line.pricePerKg = pricePerKg;
+        line.totalPrice = priceForWeight(pricePerKg, newWeight);
+        if (line.cartId) line.cartId = `${line.slug || productId}${newWeight}`;
+        nextCart = currentCart;
+      }
+      localStorage.setItem("cart", JSON.stringify(nextCart));
+      dispatch({ type: "SET_CART", payload: nextCart });
+      return true;
+    }
+
+    try {
+      const { data } = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/cart/update`,
+        { productId, weight: Number(weight), newWeight },
+        { headers: { Authorization: `Bearer ${authState.token}` } }
+      );
+      dispatch({ type: "SET_CART", payload: Array.isArray(data) ? data : [] });
+      return true;
+    } catch (error) {
+      console.error("Failed to change cart weight", error);
+      if (isAuthError(error)) clearSession();
+      return false;
     }
   };
 
@@ -303,7 +380,7 @@ useEffect(() => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, dispatch, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, changeWeight, dispatch, clearCart }}>
       {children}
     </CartContext.Provider>
   );
