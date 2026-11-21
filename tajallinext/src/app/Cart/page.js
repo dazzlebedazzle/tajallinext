@@ -16,7 +16,6 @@ import emptyCartAnimation from '../../../public/emptykart.json';
 import { useOrder } from "@/Context/OrderContext";
 import Image from "next/image";
 import Loader from "@/Components/Loader/Loader";
-import WeightSelector from "@/Components/WeightSelector/WeightSelector";
 
 
 // Dynamically import Lottie with SSR disabled
@@ -31,7 +30,7 @@ const defaultOptions = {
 };
 
 const Cart = ({ isOpen, onClose }) => {
-  const { cart, removeFromCart, updateQuantity, addToCart, changeWeight } = useCart();
+  const { cart, removeFromCart, updateQuantity, addToCart } = useCart();
   const { verifOtp } = useContext(AuthContext);
   const { setOrderDetails } = useOrder();
   const router = useRouter(); // Use Next.js router
@@ -42,22 +41,11 @@ const Cart = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isLoadingOtp, setIsLoadingOtp] = useState(false);
-  const [pendingLine, setPendingLine] = useState(null);
 
 
   if (!Array.isArray(cart)) {
     return <Loader/>;
   }
-
-  const lineKey = (item) => `${item.productId}-${Number(item.weight)}`;
-
-  // 500 g -> 1 kg on the same line; price is recalculated (by the server for logged-in users)
-  const handleWeightChange = async (item, newWeight) => {
-    setPendingLine(lineKey(item));
-    const ok = await changeWeight(item.productId, item.weight, newWeight);
-    setPendingLine(null);
-    if (!ok) alert('Could not change the weight. Please try again.');
-  };
 
   const handleRemove = (productId, weight) => {
     removeFromCart(productId, weight);
@@ -282,26 +270,12 @@ const handleProceedToPayment = () => {
                 />
                 <div className="cart-item-details">
                   <h3>{truncateTitle(item.title, 7)}</h3>
-                  <div className="cart-item-weight">
-                    <span>Weight</span>
-                    <WeightSelector
-                      compact
-                      value={Number(item.weight)}
-                      weights={item.weightOptions?.length ? item.weightOptions : [item.weight]}
-                      rules={item.weightRules}
-                      disabled={pendingLine === lineKey(item)}
-                      onChange={(newWeight) => handleWeightChange(item, newWeight)}
-                    />
-                  </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <p className="m-0">
-                      Rs.{item.totalPrice * item.quantity}
+                      Rs.{item.totalPrice}
                       <span>
-                        &nbsp; Rs.<s> {(item.totalPrice + 100) * item.quantity}</s>
+                        &nbsp; Rs.<s> {item.totalPrice + 100}</s>
                       </span>
-                      {item.quantity > 1 && (
-                        <small className="cart-item-each">Rs.{item.totalPrice} × {item.quantity}</small>
-                      )}
                     </p>
                     <div className="quantity-controls">
                       <button

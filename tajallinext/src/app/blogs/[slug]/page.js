@@ -1,148 +1,177 @@
-import React from "react";
-import axios from "axios";
+import Link from 'next/link';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import style from './BlogDetails.module.css';
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import Link from "next/link";
-import Image from "next/image";
-import Script from "next/script";
+import BlogCard from '../BlogCard';
+import {
+  SITE_URL,
+  blogUrl,
+  formatDate,
+  getBlog,
+  getBlogs,
+  jsonLd,
+  publishedDate,
+  readingMinutes,
+  tagToSlug,
+} from '@/lib/blog';
 
-export const dynamic = "force-dynamic"; // ✅ Add this at the top
+export const revalidate = 300;
 
-// Fetch a single blog based on slug
-async function fetchBlog(slug) {
-    const apiURLs = [
-        (process.env.NEXT_PUBLIC_API_URL || "").trim(),
-        "http://localhost:5000",
-    ].filter(Boolean);
-
-    for (const baseURL of [...new Set(apiURLs)]) {
-        try {
-            const response = await axios.get(`${baseURL}/api/blogs/getBlogSlug/${encodeURIComponent(slug)}`);
-            return response.data;
-        } catch (error) {
-            console.error(`Error fetching blog data from ${baseURL}:`, error?.response?.status || error.message);
-        }
-    }
-
-    return null;
+// Pre-render known posts at build time; new posts are rendered on first visit, then cached
+export async function generateStaticParams() {
+  const blogs = await getBlogs();
+  return blogs.map((b) => ({ slug: b.slug }));
 }
 
-// Dynamic Metadata
 export async function generateMetadata({ params }) {
-    const { slug } = await params;
-    const blog = await fetchBlog(slug);
+  const { slug } = await params;
+  const blog = await getBlog(slug);
 
-    if (!blog) {
-        return {
-            title: "Blog Not Found | Tajalli",
-            description: "The requested blog could not be found. Explore our other insightful blogs.",
-        };
-    }
+  if (!blog) {
+    return { title: 'Blog Not Found | Tajalli', robots: { index: false } };
+  }
 
-    return {
-        title: `${blog.title} | Tajalli Blog`,
-        description: blog.desc,
-        openGraph: {
-            title: blog.title,
-            description: blog.desc,
-            images: [{ url: blog.image }],
-            url: `https://www.tajalli.co.in/blogs/${slug}`,
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: blog.title,
-            description: blog.desc,
-            image: blog.image,
-        }
-    };
+  const title = blog.metaTitle || `${blog.title} | Tajalli Blog`;
+  const description = blog.metaDescription || blog.desc;
+  const url = blogUrl(blog.slug);
+  const image = { url: blog.image, alt: blog.imageAlt || blog.title };
+
+  return {
+    title,
+    description,
+    keywords: blog.tags,
+    authors: [{ name: blog.author }],
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      url,
+      title,
+      description,
+      siteName: 'Tajalli',
+      images: [image],
+      publishedTime: new Date(publishedDate(blog)).toISOString(),
+      modifiedTime: new Date(blog.updatedAt || publishedDate(blog)).toISOString(),
+      authors: [blog.author],
+      tags: blog.tags,
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [blog.image] },
+  };
 }
 
-// Blog Detail Page
-const BlogPage = async ({ params }) => {
-    const { slug } = await params;
-    const blog = await fetchBlog(slug);
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-        const year = date.getFullYear();
-        return `${day}-${month}-${year}`;
-      };
+export default async function BlogPage({ params }) {
+  const { slug } = await params;
+  const blog = await getBlog(slug);
+  if (!blog) notFound();
 
-    if (!blog) {
-        return (
-            <section className="container py-5">
-                <div className="border rounded p-4 my-3 text-center">
-                    <h1>Blog Not Found</h1>
-                    <p>The requested blog could not be found. Please try again later.</p>
-                    <Link href="/" className="btn btn-primary mt-3">
-                        Back to Home
-                    </Link>
-                </div>
-            </section>
-        );
-    }
+  const content = String(blog.content || '').replace(/\\n/g, '\n');
+  const published = publishedDate(blog);
+  const url = blogUrl(blog.slug);
 
-    const schemaData = {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": `https://www.tajalli.com/blogs/${blog.slug}`
-        },
-        "headline": blog.title,
-        "description": blog.desc,
-        "image": blog.image,
-        "author": {
-          "@type": "Organization",
-          "name": "TAJALLI"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "TAJALLI",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.tajalli.co.in/logo.png" // Replace with your actual logo
-          }
-        },
-        "datePublished": formatDate(blog.createdAt)
-      };
+  // Up to 3 other posts, preferring ones that share a tag
+  const others = (await getBlogs()).filter((b) => b.slug !== blog.slug);
+  const related = [
+    ...others.filter((b) => (b.tags || []).some((t) => blog.tags?.includes(t))),
+    ...others.filter((b) => !(b.tags || []).some((t) => blog.tags?.includes(t))),
+  ].slice(0, 3);
 
-    return (
-            <>
-            <section>
-            <div className={`container ${style.blog_container}`}>
-            <div className={`${style.blog_box} py-5`}>
+  const schema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+      url,
+      headline: blog.title,
+      description: blog.metaDescription || blog.desc,
+      image: [blog.image],
+      keywords: (blog.tags || []).join(', '),
+      wordCount: content.split(/\s+/).filter(Boolean).length,
+      author: { '@type': 'Person', name: blog.author },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Tajalli',
+        logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+      },
+      datePublished: new Date(published).toISOString(),
+      dateModified: new Date(blog.updatedAt || published).toISOString(),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Blogs', item: `${SITE_URL}/blogs` },
+        { '@type': 'ListItem', position: 3, name: blog.title, item: url },
+      ],
+    },
+  ];
+
+  return (
+    <>
+      <article className={`container ${style.blog_container}`}>
+        <div className={`${style.blog_box} py-5`}>
+          <nav aria-label="Breadcrumb" className={style.breadcrumb}>
+            <Link href="/">Home</Link> <span aria-hidden="true">›</span> <Link href="/blogs">Blogs</Link>
+          </nav>
+
+          <header>
             <h1>{blog.title}</h1>
-            <div className={style.imagebox}>
-            <Image width={1080} height={1080} src={blog?.image} alt={blog.title}  className={`my-5 ${style.image}`}/>
-            </div>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {blog.content.replace(/\\n/g, '\n')}
-            </ReactMarkdown>
-                <hr />
-            <div className="mt-4">
-                <span>Tags:</span>
-            {blog.tags.map((data, index) => {
-                // const urltitle = data.slice(0, data.title.indexOf("|")).trim();
-                const formattedTitle = data.replace(/\s+/g, '-').replace(/[%|]/g, '');   
-                return(
-                <Link  key={index} href={`/blogs/tags/${formattedTitle}`} className="btn btn-outline-secondary m-2">{data}</Link>
-                )
-                })}
-            </div>
-            </div>
-            </div>
-            </section>
-            <Script
-                id="json-ld-blog-post"
-                type="application/ld+json"
-                strategy="afterInteractive"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-            />
-            </>
-    );
-};
+            <p className={style.meta}>
+              By {blog.author} · <time dateTime={new Date(published).toISOString()}>{formatDate(published)}</time> ·{' '}
+              {readingMinutes(content)} min read
+            </p>
+          </header>
 
-export default BlogPage;
+          <div className={style.imagebox}>
+            <Image
+              width={1200}
+              height={675}
+              sizes="(max-width: 900px) 90vw, 70vw"
+              src={blog.image}
+              alt={blog.imageAlt || blog.title}
+              className={`my-4 ${style.image}`}
+              priority
+            />
+          </div>
+
+          <div className={style.content}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          </div>
+
+          {blog.tags?.length > 0 && (
+            <>
+              <hr />
+              <div className="mt-4">
+                <span>Tags:</span>
+                {blog.tags.map((tag) => (
+                  <Link key={tag} href={`/blogs/tags/${tagToSlug(tag)}`} className="btn btn-outline-secondary m-2">
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="mt-4 d-flex flex-wrap gap-2">
+            <Link href="/blogs" className="btn btn-outline-dark">← All blogs</Link>
+            <Link href="/Shop/All-Products" className="btn btn-dark">Shop dry fruits</Link>
+          </div>
+        </div>
+      </article>
+
+      {related.length > 0 && (
+        <section className="container pb-5" aria-labelledby="related-heading">
+          <h2 id="related-heading" className={style.relatedTitle}>You may also like</h2>
+          <div className="row">
+            {related.map((post) => (
+              <BlogCard key={post._id} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(schema)} />
+    </>
+  );
+}

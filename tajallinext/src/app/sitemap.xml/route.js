@@ -25,7 +25,7 @@ export async function GET() {
           <priority>1.0</priority>
         </url>
         <url>
-        <loc>${baseUrl}/Contactus</loc>
+        <loc>${baseUrl}/contact-us</loc>
           <changefreq>daily</changefreq>
           <priority>1.0</priority>
         </url>
@@ -47,12 +47,14 @@ export async function GET() {
           })
           .join('')}
           
-          ${data2
+          ${(Array.isArray(data2) ? data2 : [])
             .map((blog) => {
               const slug = blog.slug;
+              const lastmod = blog.updatedAt || blog.publishedAt || blog.createdAt;
               return `
               <url>
                 <loc>${baseUrl}/blogs/${slug}</loc>
+                ${lastmod ? `<lastmod>${new Date(lastmod).toISOString()}</lastmod>` : ''}
                 <changefreq>weekly</changefreq>
                 <priority>0.8</priority>
               </url>`;

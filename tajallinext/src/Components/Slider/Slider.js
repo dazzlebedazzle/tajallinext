@@ -5,20 +5,24 @@ import Slider from 'react-slick';
 import Image from 'next/image';
 import './Slider.css';
 
+// "Premium Special" banners (hosted on Cloudinary, 2200 x 838)
 const bannerSlides = [
   {
-    src: '/assets/tj01.jpeg',
-    alt: 'Tajalli festive season nutritious deals gift combo banners',
+    src: 'https://res.cloudinary.com/dqa6jk5fx/image/upload/c_scale,w_2200/f_auto/q_60/v1722759470/nltkiyr5lnr3uoldrpef.webp',
+    alt: 'Tajalli Premium Special Mamra Almonds banner',
   },
   {
-    src: '/assets/tj02.jpeg',
-    alt: 'Tajalli festive season dry fruits deal banners',
+    src: 'https://res.cloudinary.com/dqa6jk5fx/image/upload/c_scale,w_2200/f_auto/q_60/v1722759786/aivsoiekpkunr1jjvlww.webp',
+    alt: 'Tajalli Premium Special Green Raisins banner',
   },
   {
-    src: '/assets/tj03.jpeg',
-    alt: 'Tajalli festive season nutritious deals banners',
+    src: 'https://res.cloudinary.com/dqa6jk5fx/image/upload/c_scale,w_2200/f_auto/q_60/v1722759842/tzftgw3y9ly0k08c4nlo.webp',
+    alt: 'Tajalli Premium Special Trail Mixture banner',
   },
-
+  {
+    src: 'https://res.cloudinary.com/dqa6jk5fx/image/upload/c_scale,w_2200/f_auto/q_60/v1722759885/ncuxy7cxzqu97gwi3gz6.webp',
+    alt: 'Tajalli Premium Special Medjool Dates banner',
+  },
 ];
 
 const SimpleSlider = () => {
@@ -41,8 +45,8 @@ const SimpleSlider = () => {
             <Image
               src={slide.src}
               alt={slide.alt}
-              width={1600}
-              height={580}
+              width={2200}
+              height={838}
               priority={index === 0}
               loading={index === 0 ? undefined : 'lazy'}
             />

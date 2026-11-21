@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProductList from "@/Components/ProductList/ProductList";
 import axios from "axios";
@@ -286,4 +286,11 @@ Yes, dry fruits like walnuts, dates, and figs are rich in antioxidants, vitamins
     );
 };
 
-export default ShopPage;
+// useSearchParams needs a Suspense boundary now that pages render on the server
+const ShopRoute = () => (
+    <Suspense fallback={<Loader />}>
+        <ShopPage />
+    </Suspense>
+);
+
+export default ShopRoute;

@@ -137,8 +137,8 @@ export const OrderProvider = ({ children }) => {
     localStorage.removeItem('orderState');
   };
 
-  // Avoid rendering children until component is mounted
-  if (!hasMounted) return null;
+  // Children always render (also on the server) so pages ship real HTML for search engines.
+  // Saved order data is restored from localStorage in the effect above, after mount.
 
   return (
     <OrderContext.Provider

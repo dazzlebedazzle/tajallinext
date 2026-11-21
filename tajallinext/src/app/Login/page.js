@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -376,4 +376,11 @@ const Login = () => {
   );
 };
 
-export default Login;
+// useSearchParams needs a Suspense boundary now that pages render on the server
+const LoginPage = () => (
+  <Suspense fallback={null}>
+    <Login />
+  </Suspense>
+);
+
+export default LoginPage;

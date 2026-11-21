@@ -564,19 +564,3 @@ border: none;
 }
 
 
-/* Change weight in place (500 g -> 1 kg) */
-.cart-item-weight {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 4px 0 6px;
-}
-.cart-item-weight > span {
-  font-size: 12px;
-  color: #7a6a5c;
-}
-.cart-item-each {
-  display: block;
-  font-size: 11px;
-  color: #7a6a5c;
-}

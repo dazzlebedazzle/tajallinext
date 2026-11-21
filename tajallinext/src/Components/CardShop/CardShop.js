@@ -9,8 +9,6 @@ import vegIcon from '../../../public/assets/pure-veg-icon.webp';
 // import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { useCart } from '@/Context/CartContext';
 import cartGif from '../../../public/assets/Addtocart.gif';
-import WeightSelector from '../WeightSelector/WeightSelector';
-import { priceForWeight } from '@/utils/weight';
 
 const Card = ({ product }) => {
   const [selectedWeight, setSelectedWeight] = useState(null);
@@ -25,11 +23,15 @@ const Card = ({ product }) => {
     }
   }, [product.weights]);
 
+  const handleWeightChange = (event) => {
+    setSelectedWeight(parseFloat(event.target.value));
+  };
+
   const productImage = Array.isArray(product.images) && product.images.length > 0
     ? product.images[0].replace('/upload/', '/upload/c_scale,w_400/f_webp/q_60/').replace(/\.(jpg|jpeg|png)$/, '.webp')
     : '';
 
-  const calculatedPrice = selectedWeight ? priceForWeight(product.price, selectedWeight) : 0;
+  const calculatedPrice = selectedWeight ? Math.round((product.price * selectedWeight) / 1000) : 0;
 
   const handleAddToCart = async () => {
     if (!selectedWeight) return;
@@ -44,9 +46,7 @@ const Card = ({ product }) => {
       weight: selectedWeight,
       totalPrice: calculatedPrice,
       quantity: 1,
-      slug:product.slug,
-      pricePerKg: product.price,
-      weightOptions: product.weights
+      slug:product.slug
     };
     const added = await addToCart(productWithDetails);
     if (!added) {
@@ -92,17 +92,17 @@ const Card = ({ product }) => {
         <div className="weightperg">
           <p className="pricefont">Rs: <strong>{calculatedPrice}/-</strong></p>
           <span>Rs: <s>{calculatedPrice + 100}</s></span>
+          <select
+            className="weight"
+            id={`weight-select-${product._id}`}
+            value={selectedWeight || ''}
+            onChange={handleWeightChange}
+          >
+            {product.weights && product.weights.map(weight => (
+              <option key={weight} value={weight}>{weight}gm</option>
+            ))}
+          </select>
         </div>
-        {selectedWeight ? (
-          <div className="card-weight">
-            <WeightSelector
-              compact
-              value={selectedWeight}
-              onChange={setSelectedWeight}
-              weights={product.weights}
-            />
-          </div>
-        ) : null}
         <button className="add" 
         onClick={handleAddToCart}
         >Add To Cart</button>

@@ -1,65 +1,81 @@
-import Link from "next/link";
-import style from './BlogList.module.css'
-import Image from "next/image";
+import Link from 'next/link';
+import style from './BlogList.module.css';
+import BlogCard from './BlogCard';
+import { SITE_URL, getBlogs, jsonLd, tagToSlug, blogUrl, publishedDate } from '@/lib/blog';
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
-async function fetchAllBlogs() {
-    const baseURL = "https://api.tajalli.co.in";
-    try {
-        const response = await fetch(`${baseURL}/api/blogs/getBlog`, { cache: "no-store" }); // No cache ensures fresh data
-        return await response.json();
-    } catch (error) {
-        console.error("Error fetching blog data:", error);
-        return [];
-    }
-}
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+const TITLE = 'Blog – Dry Fruit Tips, Health Benefits & Recipes | Tajalli';
+const DESCRIPTION =
+  'Read the Tajalli blog for dry fruit health benefits, nutrition guides, storage tips and recipes with premium almonds, pistachios, raisins and more.';
+
+export const metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: `${SITE_URL}/blogs` },
+  openGraph: {
+    type: 'website',
+    url: `${SITE_URL}/blogs`,
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: 'Tajalli',
+  },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
+};
 
 export default async function BlogListPage() {
-    const blogs = await fetchAllBlogs();
+  const blogs = await getBlogs();
+  const tags = [...new Set(blogs.flatMap((b) => b.tags || []))].sort();
 
-    return (
-        <div className="bloglist">
-          <section className={style.aboutus_header}>
-    
-            <h1>
-              <strong>Blogs</strong>
-            </h1>
-            
-          </section>
-          <section>
-          <div className="container py-5">
-              <div className="row">
-                  {blogs.map((data)=>{
-                      const urltitle = data.title.slice(0, data.title.indexOf("|")).trim();
-                      const formattedTitle = urltitle.replace(/\s+/g, '-').replace(/[%|]/g, '');
-                                        
-                      return(
-                          <div className="col-lg-4 col-md-6 mt-4" key={data._id}>
-                              <Link href={`/blogs/${data.slug }`} className={style.bloglink}>
-                              <div className={style.bloglistitem}>
-                              <Image width={500} height={500} src={data.image} alt={data.title} />
-                              <div className={style.blogdesc}>
-                              <h3>{data.title}</h3>
-                              <p>{data.desc}</p>
-                              <div className={style.writerdetail}><p>{data.author}</p><p>{formatDate(data.createdAt)}</p></div>
-                              </div>
-                              </div>
-                              </Link>
-                          </div>
-  
-                      )
-                  })}
-              </div>
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Tajalli Blog',
+    url: `${SITE_URL}/blogs`,
+    description: DESCRIPTION,
+    publisher: { '@type': 'Organization', name: 'Tajalli', logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` } },
+    blogPost: blogs.slice(0, 20).map((b) => ({
+      '@type': 'BlogPosting',
+      headline: b.title,
+      url: blogUrl(b.slug),
+      image: b.image,
+      datePublished: new Date(publishedDate(b)).toISOString(),
+    })),
+  };
+
+  return (
+    <div className="bloglist">
+      <section className={style.aboutus_header}>
+        <h1>
+          <strong>Blogs</strong>
+        </h1>
+      </section>
+
+      <section className="container py-5">
+        <p className={style.intro}>{DESCRIPTION}</p>
+
+        {tags.length > 0 && (
+          <nav aria-label="Blog topics" className={style.taglist}>
+            {tags.map((tag) => (
+              <Link key={tag} href={`/blogs/tags/${tagToSlug(tag)}`} className="btn btn-outline-secondary btn-sm m-1">
+                {tag}
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {blogs.length === 0 ? (
+          <p className="text-center py-5">New articles are coming soon. Check back shortly!</p>
+        ) : (
+          <div className="row">
+            {blogs.map((post, index) => (
+              <BlogCard key={post._id} post={post} priority={index < 3} />
+            ))}
           </div>
-          </section>
-      </div>
-    );
+        )}
+      </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(schema)} />
+    </div>
+  );
 }

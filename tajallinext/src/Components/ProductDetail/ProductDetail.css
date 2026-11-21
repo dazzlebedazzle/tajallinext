@@ -552,15 +552,3 @@
         width: 20%;
     }
 }
-
-/* Weight picker (GM / KG) */
-.price-per-unit {
-    font-size: 14px;
-    color: #7a6a5c;
-}
-.weight-selection--custom {
-    align-items: flex-start;
-}
-.weight-selection--custom > p {
-    padding-top: 6px;
-}

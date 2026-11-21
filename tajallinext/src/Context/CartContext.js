@@ -3,7 +3,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
-import { priceForWeight } from '@/utils/weight';
 
 const CartContext = createContext();
 
@@ -319,59 +318,11 @@ useEffect(() => {
             Authorization: `Bearer ${authState.token}`,
           },
         });
-        if (Array.isArray(data)) dispatch({ type: 'SET_CART', payload: data });
-        else dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, weight, quantity } });
+        dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, weight, quantity } });
       } catch (error) {
         console.error('Failed to update cart quantity', error);
         if (isAuthError(error)) clearSession();
       }
-    }
-  };
-
-  // Change the weight of an existing cart line (e.g. 500 g -> 1 kg) instead of adding another line.
-  // If the cart already has this product at the new weight, the two lines are merged.
-  // Returns true on success.
-  const changeWeight = async (productId, weight, rawNewWeight) => {
-    const newWeight = Number(rawNewWeight);
-    if (!Number.isFinite(newWeight) || newWeight <= 0 || sameWeight(weight, newWeight)) return false;
-
-    if (!authState.isAuthenticated) {
-      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const line = currentCart.find(item => item.productId === productId && sameWeight(item.weight, weight));
-      if (!line) return false;
-
-      // Older guest lines don't carry pricePerKg: derive it from the stored pack price
-      const pricePerKg = Number(line.pricePerKg) || (Number(line.totalPrice) * 1000) / Number(line.weight);
-      const target = currentCart.find(item => item.productId === productId && sameWeight(item.weight, newWeight));
-
-      let nextCart;
-      if (target) {
-        target.quantity += line.quantity;
-        nextCart = currentCart.filter(item => item !== line);
-      } else {
-        line.weight = newWeight;
-        line.pricePerKg = pricePerKg;
-        line.totalPrice = priceForWeight(pricePerKg, newWeight);
-        if (line.cartId) line.cartId = `${line.slug || productId}${newWeight}`;
-        nextCart = currentCart;
-      }
-      localStorage.setItem("cart", JSON.stringify(nextCart));
-      dispatch({ type: "SET_CART", payload: nextCart });
-      return true;
-    }
-
-    try {
-      const { data } = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user/cart/update`,
-        { productId, weight: Number(weight), newWeight },
-        { headers: { Authorization: `Bearer ${authState.token}` } }
-      );
-      dispatch({ type: "SET_CART", payload: Array.isArray(data) ? data : [] });
-      return true;
-    } catch (error) {
-      console.error("Failed to change cart weight", error);
-      if (isAuthError(error)) clearSession();
-      return false;
     }
   };
 
@@ -380,7 +331,7 @@ useEffect(() => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, changeWeight, dispatch, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, dispatch, clearCart }}>
       {children}
     </CartContext.Provider>
   );

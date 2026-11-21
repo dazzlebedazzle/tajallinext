@@ -1,16 +1,16 @@
 // ImageUrls.js
-import pista from '../pista.webp';
-import almonds_1 from '../almonds_1.webp';
-import cashew_1 from '../cashew_1.webp';
-import dates_1 from '../dates_1.webp';
-import berry_1 from '../berry_1.webp';
-import walnuts_1 from '../walnuts_1.webp'
-import raisins_1 from '../raisins.webp'
+import pista from '../categories/pistachio.webp';
+import almonds_1 from '../categories/almonds.webp';
+import cashew_1 from '../categories/cashews.webp';
+import dates_1 from '../categories/dates.webp';
+import berry_1 from '../categories/berries.webp';
+import walnuts_1 from '../categories/walnuts.webp'
+import raisins_1 from '../categories/raisins.webp'
 import saffron_1 from '../Saffron.webp'
-import apricot_1 from '../Apricot.webp'
+import apricot_1 from '../categories/apricots.webp'
 import nuts_1 from '../nuts.webp'
-import mixtures_1 from '../mixtures.webp'
-import seeds_1 from '../seeds.webp'
+import mixtures_1 from '../categories/mixtures.webp'
+import seeds_1 from '../categories/seeds.webp'
 import fruits_1 from '../fruits.webp'
 
 

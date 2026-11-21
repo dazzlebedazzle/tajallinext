@@ -6,7 +6,38 @@
 .imagebox{
     display: flex;
     justify-content: center;
-    align-items: centerc;
+    align-items: center;
+}
+.breadcrumb {
+    font-size: 14px;
+    color: #7a6a5c;
+    margin-bottom: 16px;
+}
+.breadcrumb a {
+    color: #723207;
+    text-decoration: none;
+}
+.meta {
+    color: #6b5a4c;
+    font-size: 15px;
+}
+.content {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #2b2420;
+}
+.content h2,
+.content h3 {
+    color: #4b2d00;
+    margin-top: 1.6em;
+}
+.content img {
+    max-width: 100%;
+    height: auto;
+}
+.relatedTitle {
+    color: #4b2d00;
+    font-size: 26px;
 }
 .blog_box{
     width: 70%;

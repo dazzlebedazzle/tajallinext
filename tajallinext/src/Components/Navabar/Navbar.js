@@ -268,6 +268,15 @@ const Navbar = () => {
 </li>
 <li>
   <Link
+    href="/blogs"
+    className={activeLink.startsWith("/blogs") ? "active" : ""}
+    onClick={() => setIsOpen(false)}
+  >
+    Blogs
+  </Link>
+</li>
+<li>
+  <Link
     href="/contact-us"
     className={activeLink === "/contact-us" ? "active" : ""}
     onClick={() => setIsOpen(false)}
