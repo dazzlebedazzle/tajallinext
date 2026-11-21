@@ -1,7 +1,8 @@
 
 import Link from "next/link";
 import style from "./Footer.module.css";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaHome } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaHome } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { IoIosMail } from "react-icons/io";
 import { MdPhoneCallback } from "react-icons/md";
 import Image from "next/image"; // Use Next.js Image component
@@ -40,9 +41,8 @@ const Footer = () => {
                 <FaFacebookF />
               </Link>
               
-              <Link target="blank" href="https://x.com/TajalliProduct" aria-label="twitter account">
-                  
-                <FaTwitter />
+              <Link target="blank" href="https://x.com/TajalliProduct" aria-label="X (Twitter) account">
+                <FaXTwitter />
               </Link>
               <Link
               target="blank"

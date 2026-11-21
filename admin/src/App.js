@@ -12,6 +12,8 @@ import PolicyOfTajalli from './pages/policyOfTajalli';
 import SendCoupon from './pages/sendcoupon';
 import CreateBanner from './pages/CreateBanner'
 import CreateOfferForm from './pages/CreateOfferForm';
+import Blogs from './pages/Blogs';
+import Billing from './pages/Billing';
 
 const App = () => {
   return (
@@ -28,6 +30,8 @@ const App = () => {
           <Route path="/" element={<Home />} /> 
           <Route path="/SendCoupon" element={<SendCoupon/>} /> 
           <Route path="/CreateBanner" element={<CreateBanner/>} /> 
+          <Route path="/blog" element={<Blogs />} />
+          <Route path="/billing" element={<Billing />} />
           <Route path="*" element={<Navigate to="/" />} /> {/* Redirect any unknown routes to Home */}
         </Routes>
       </AuthProvider>

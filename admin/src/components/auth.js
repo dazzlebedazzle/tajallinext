@@ -60,19 +60,31 @@ export const AuthProvider = ({ children }) => {
       });
     }
     else{
-      alert("You are not an Authorized User");
+      localStorage.removeItem('role');
       setAuthState({
         isAuthenticated: false,
         user: null,
         token: null,
         authLoading: false,
       });
+      throw new Error('This account is not an admin. Log in with an admin account.');
     }
-
-      navigate('/');
-     // Redirect to homepage after successful login
     } catch (error) {
       console.error('Login failed:', error);
+      // Pass a readable reason back to the Login page instead of failing silently
+      if (!error.response) {
+        throw new Error(
+          error.message?.includes('not an admin')
+            ? error.message
+            : `Cannot reach the server at ${process.env.REACT_APP_API_URL}. Is it running?`
+        );
+      }
+      const serverMessage = error.response.data?.message || '';
+      throw new Error(
+        /invall?id credential/i.test(serverMessage)
+          ? 'Wrong email or password.'
+          : serverMessage || `Login failed (error ${error.response.status}).`
+      );
     }
   };
 

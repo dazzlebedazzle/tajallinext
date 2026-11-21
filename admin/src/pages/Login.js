@@ -14,14 +14,12 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      await login(email, password); // Call login function from auth.js
-     
-      
-      navigate('/dashboard');  // Redirect to dashboard or desired page
-      }
-    catch (err) {
-      setError('Invalid email or password');
+      await login(email, password); // throws with a readable reason on failure
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password');
     }
   };
 

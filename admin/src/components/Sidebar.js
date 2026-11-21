@@ -138,6 +138,15 @@ const Sidebar = () => {
               </Link>
             </li>
 
+            <li className={activeLink === '/billing' ? 'hovered' : ''}>
+              <Link to="/billing" onClick={() => setActiveLink('/billing')}>
+                <span className="icon">
+                  <AiOutlineFileText />
+                </span>
+                <span className="title">Billing</span>
+              </Link>
+            </li>
+
             <li className={activeLink === '/blog' ? 'hovered' : ''}>
               <Link to="/blog" onClick={() => setActiveLink('/blog')}>
                 <span className="icon">
